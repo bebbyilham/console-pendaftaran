@@ -5,7 +5,7 @@
                 <span>&copy; TIM IT RSJ PROF. HB. SAANIN PADANG <?= date('Y'); ?>
             </div>
         </div>
-        <div class="col-lg-6">
+        <!-- <div class="col-lg-6">
             <ul class="nav nav-footer justify-content-center justify-content-lg-end">
                 <li class="nav-item">
                     <a href="https://rsjhbsaanin.sumbarprov.go.id/" class="nav-link" target="_blank"><i class="ni ni-world mr-1"></i>Website</a>
@@ -15,7 +15,7 @@
                 </li>
 
             </ul>
-        </div>
+        </div> -->
     </div>
 </footer>
 </div>
@@ -117,6 +117,16 @@
         });
 
     });
+
+    window.setTimeout("waktu()", 1000);
+
+    function waktu() {
+        var waktu = new Date();
+        setTimeout("waktu()", 1000);
+        document.getElementById("jam").innerHTML = waktu.getHours();
+        document.getElementById("menit").innerHTML = waktu.getMinutes();
+        document.getElementById("detik").innerHTML = waktu.getSeconds();
+    }
 </script>
 
 </body>

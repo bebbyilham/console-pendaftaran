@@ -34,6 +34,8 @@
 	<link rel="stylesheet" type="text/css" href="<?= base_url(); ?>assets/css/jquery.datetimepicker.min.css">
 	<!-- summernote -->
 	<link rel="stylesheet" href="<?= base_url() ?>assets/dist/plugins/summernote/summernote-bs4.min.css">
+	<!-- Date time -->
+	<script type="text/javascript" src="<?= base_url(); ?>assets/js/date_time.js"></script>
 
 
 </head>
