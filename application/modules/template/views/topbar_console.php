@@ -6,15 +6,23 @@
 
                 <!-- Navbar links -->
                 <ul class="navbar-nav align-items-center ml-md-auto">
+
                     <li class="nav-item">
-                        <div class="float-left d-none d-sm-inline-block text-white">
-                            <strong><span></span><?= date('d-m-Y') ?></strong>
-                            <strong><span id="jam"></span>:</strong>
-                            <strong><span id="menit"></span>:</strong>
-                            <strong><span id="detik"></span></strong>
+                        <div class="col text-center">
+                            <a href="#" class="btn btn-sm btn-neutral"><?= date('d-m-Y') ?></a>
+                            <a href="#" class="btn btn-sm btn-neutral"><span id="jam"></span></a>
+                            <a href="#" class="btn btn-sm btn-neutral"><span id="menit"></span></a>
+                            <a href="#" class="btn btn-sm btn-neutral"><span id="detik"></span></a>
                             <script type="text/javascript">
                                 window.onload = date_time('date_time');
                             </script>
+                        </div>
+
+                    </li>
+                    <li class="nav-item">
+                        <div class="float-left d-none d-sm-inline-block text-white">
+
+                            <h6 class="h2 text-white d-inline-block mb-0">Rumah Sakit Jiwa Prof. HB Saanin Padang</h6>
                         </div>
                         <!-- Sidenav toggler -->
                         <!-- <div class="pr-3 sidenav-toggler sidenav-toggler-dark" data-action="sidenav-pin" data-target="#sidenav-main">
@@ -26,13 +34,13 @@
                         </div> -->
 
                     </li>
-                    <li class="nav-item dropdown">
+                    <!-- <li class="nav-item dropdown">
 
                         <a class="nav-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <h6 class="h2 text-white d-inline-block mb-0">Rumah Sakit Jiwa Prof. HB Saanin Padang</h6>
                         </a>
 
-                    </li>
+                    </li> -->
                 </ul>
             </div>
         </div>

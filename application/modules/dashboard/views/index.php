@@ -224,6 +224,8 @@
                       },
                       dataType: 'JSON',
                       success: function(data) {
+                          $('#btn_cek_kodebooking').attr('disabled', false);
+                          weHaveSuccess = true;
                           console.log(data.metadata.code);
                           var pesan = data.metadata.message;
                           if (data.metadata.code == 200) {
@@ -242,11 +244,12 @@
                       },
                       error: function(error) {
                           alert("Request time out! " + xhr.status);
+                          $('#btn_cek_kodebooking').attr('disabled', false);
                       },
                       complete: function() {
                           if (!weHaveSuccess) {
                               $('#btn_cek_kodebooking').attr('disabled', false);
-                              alert('Silahkan coba lagi!');
+                              alert('Silahkan coba lagi!iiii');
                           }
                       },
                   });
