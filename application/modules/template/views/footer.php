@@ -87,7 +87,7 @@
 <script src="<?php echo base_url(); ?>assets/dist/plugins/inputmask/jquery.inputmask.min.js"></script>
 <!-- Summernote -->
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
-<script src="<?= base_url(); ?>assets/js/fontawesome.all.min.js"></script>
+<script src="<?= base_url(); ?>assets/vendor/@fortawesome/fontawesome-free/js/all.min.js"></script>
 
 
 

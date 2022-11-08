@@ -1,10 +1,9 @@
 <?php
-// require_once BASEPATH . '/helpers/url_helper.php';
-$KEY = __DIR__ . '\cert.pem';
+$KEY = 'cert.pem'; // or 'server.key', etc
 $req = $_GET['request'];  // i.e. 'toSign' from JS
 $privateKey = openssl_get_privatekey(file_get_contents($KEY));
 $signature = null;
-openssl_get_curve_names($req, $signature, $privateKey);
+openssl_sign($req, $signature, $privateKey);
 if ($signature) {
 	header("Content-type: text/plain");
 	echo base64_encode($signature);

@@ -13,9 +13,9 @@
                             <a href="#" class="btn btn-sm btn-neutral"><span id="jam"></span></a>
                             <a href="#" class="btn btn-sm btn-neutral"><span id="menit"></span></a>
                             <a href="#" class="btn btn-sm btn-neutral"><span id="detik"></span></a>
-                            <script type="text/javascript">
+                            <!-- <script type="text/javascript">
                                 window.onload = date_time('date_time');
-                            </script>
+                            </script> -->
                         </div>
 
                     </li>

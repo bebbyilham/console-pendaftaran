@@ -18,8 +18,38 @@
                       <a href="#" class="btn btn-sm btn-neutral">Filters</a>
                   </div> -->
               </div>
+
               <!-- Card stats -->
               <div class="row">
+                  <!-- <div class="col-12">
+                      <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                          <ol class="carousel-indicators">
+                              <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                              <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                              <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+                          </ol>
+                          <div class="carousel-inner">
+                              <div class="carousel-item active">
+                                  <img class="d-block w-100" src="<?php echo base_url('assets/img/image_blog/66313f014cd933236aead060f7e72e13.png'); ?>" alt="First slide">
+                              </div>
+                              <div class="carousel-item">
+                                  <img class="d-block w-100" src="<?php echo base_url('assets/img/image_blog/66313f014cd933236aead060f7e72e13.png'); ?>" alt="Second slide">
+                              </div>
+                              <div class="carousel-item">
+                                  <img class="d-block w-100" src="<?php echo base_url('assets/img/image_blog/66313f014cd933236aead060f7e72e13.png'); ?>" alt="Third slide">
+                              </div>
+                          </div>
+                          <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                              <span class="sr-only">Previous</span>
+                          </a>
+                          <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                              <span class="sr-only">Next</span>
+                          </a>
+                      </div>
+                  </div> -->
+
                   <div class="col-6">
                       <div class="card card-stats">
                           <!-- Card body -->
@@ -212,6 +242,42 @@
               $('#onsitejkn').attr('disabled', true);
               $('.btn_daftar_umum').attr('disabled', true);
               var weHaveSuccess = false;
+
+              //Cert
+              /// Authentication setup ///
+              qz.security.setCertificatePromise(function(resolve, reject) {
+                  $.ajax("<?= base_url() ?>assets/override.crt").then(resolve, reject);
+              });
+
+              qz.security.setSignatureAlgorithm("SHA512"); // Since 2.1
+              qz.security.setSignaturePromise(function(toSign) {
+                  return function(resolve, reject) {
+                      $.post("<?= base_url('assets/signing/sign-message.php') ?>", {
+                          request: toSign,
+                      }).then(resolve, reject);
+                      //Alternate method - unsigned
+                      resolve(); // remove this line in live environment
+                  };
+              });
+              // "/demo/assets/signing/sign-message.php?request="
+
+              qz.security.setSignaturePromise(function(toSign) {
+                  return function(resolve, reject) {
+                      fetch("<?= base_url('assets/signing/sign-message.php?request=') ?>" + toSign, {
+                              cache: 'no-store',
+                              headers: {
+                                  'Content-Type': 'text/plain'
+                              }
+                          })
+                          .then(function(data) {
+                              data.ok ? resolve(data.text()) : reject(data.text());
+                          });
+                  };
+              });
+
+
+              //connect qz-tray
+              qz.websocket.connect()
 
               $('#btn_cek_kodebooking').on('click', function() {
                   var kodebooking = $('#kodebookingjkn').val();

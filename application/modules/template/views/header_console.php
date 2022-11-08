@@ -22,7 +22,7 @@
 	<!-- <link rel="stylesheet" href="<?= base_url(); ?>assets/vendor/datatables.net-select-bs4/css/select.bootstrap4.min.css"> -->
 	<!-- Sweet Alert2 -->
 	<link rel="stylesheet" href="<?= base_url(); ?>assets/vendor/animate.css/animate.min.css">
-	<link rel="stylesheet" href="<?= base_url(); ?>assets/vendor/sweetalert2/dist/sweetalert2.css">
+	<link rel="stylesheet" href="<?= base_url(); ?>assets/vendor/sweetalert2/dist/sweetalert2.min.css">
 	<!-- Argon CSS -->
 	<!-- <link rel="stylesheet" href="<?= base_url(); ?>assets/css/argon.css?v=1.2.0" type="text/css"> -->
 	<link rel="stylesheet" href="<?= base_url(); ?>assets/css/argon.css?v=1.1.0" type="text/css" />
@@ -34,6 +34,12 @@
 	<link rel="stylesheet" type="text/css" href="<?= base_url(); ?>assets/css/jquery.datetimepicker.min.css">
 	<!-- summernote -->
 	<link rel="stylesheet" href="<?= base_url() ?>assets/dist/plugins/summernote/summernote-bs4.min.css">
+	<!-- qz-tray -->
+	<script type="text/javascript" src="https://rawgit.com/qzind/tray/2.0/js/dependencies/rsvp-3.1.0.min.js"></script>
+	<script type="text/javascript" src="https://rawgit.com/qzind/tray/2.0/js/dependencies/sha-256.min.js"></script>
+	<script type="text/javascript" src="<?= base_url() ?>assets/js/qz-tray.js"></script>
+	<script src="https://cdn.rawgit.com/kjur/jsrsasign/c057d3447b194fa0a3fdcea110579454898e093d/jsrsasign-all-min.js"></script>
+
 
 
 </head>
