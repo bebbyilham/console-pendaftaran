@@ -315,7 +315,7 @@
                       complete: function() {
                           if (!weHaveSuccess) {
                               $('#btn_cek_kodebooking').attr('disabled', false);
-                              alert('Silahkan coba lagi!iiii');
+                              alert('Silahkan coba lagi!');
                           }
                       },
                   });
