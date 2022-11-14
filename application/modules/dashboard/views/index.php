@@ -252,26 +252,14 @@
               qz.security.setSignatureAlgorithm("SHA512"); // Since 2.1
               qz.security.setSignaturePromise(function(toSign) {
                   return function(resolve, reject) {
-                      $.post("<?= base_url('assets/signing/sign-message.php') ?>", {
-                          request: toSign,
+                      //Preferred method - from server
+                      //            fetch("/secure/url/for/sign-message?request=" + toSign, {cache: 'no-store', headers: {'Content-Type': 'text/plain'}})
+                      //              .then(function(data) { data.ok ? resolve(data.text()) : reject(data.text()); });
+                      $.post("assets/signing/sign-message.php", {
+                          request: toSign
                       }).then(resolve, reject);
                       //Alternate method - unsigned
-                      resolve(); // remove this line in live environment
-                  };
-              });
-              // "/demo/assets/signing/sign-message.php?request="
-
-              qz.security.setSignaturePromise(function(toSign) {
-                  return function(resolve, reject) {
-                      fetch("<?= base_url('assets/signing/sign-message.php?request=') ?>" + toSign, {
-                              cache: 'no-store',
-                              headers: {
-                                  'Content-Type': 'text/plain'
-                              }
-                          })
-                          .then(function(data) {
-                              data.ok ? resolve(data.text()) : reject(data.text());
-                          });
+                      // resolve(); 
                   };
               });
 
