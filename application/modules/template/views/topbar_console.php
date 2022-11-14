@@ -9,10 +9,10 @@
 
                     <li class="nav-item">
                         <div class="col text-center">
-                            <a href="#" class="btn btn-sm btn-neutral"><?= date('d-m-Y') ?></a>
-                            <a href="#" class="btn btn-sm btn-neutral"><span id="jam"></span></a>
+                            <!-- <a href="#" class="btn btn-sm btn-neutral"><?= date('d-m-Y') ?></a> -->
+                            <!-- <a href="#" class="btn btn-sm btn-neutral"><span id="jam"></span></a>
                             <a href="#" class="btn btn-sm btn-neutral"><span id="menit"></span></a>
-                            <a href="#" class="btn btn-sm btn-neutral"><span id="detik"></span></a>
+                            <a href="#" class="btn btn-sm btn-neutral"><span id="detik"></span></a> -->
                             <!-- <script type="text/javascript">
                                 window.onload = date_time('date_time');
                             </script> -->

@@ -56,18 +56,18 @@
                           <div class="card-body">
                               <div class="row">
                                   <div class="col">
-                                      <h5 class="card-title text-uppercase text-muted mb-0">Poli</h5>
-                                      <span class="h2 font-weight-bold mb-0"><?= $sisa_antrian_poli ?></span>
+                                      <h5 class="card-title text-uppercase text-muted mb-0">Tanggal</h5>
+                                      <span class="h2 font-weight-bold mb-0"><?= date('d-m-Y') ?></span>
                                   </div>
                                   <div class="col-auto">
                                       <div class="icon icon-shape bg-gradient-red text-white rounded-circle shadow">
-                                          <i class="fas fa-stethoscope"></i>
+                                          <i class="fas fa-calendar-alt"></i>
                                       </div>
                                   </div>
                               </div>
                               <p class="mt-3 mb-0 text-sm">
-                                  <span class="text-success mr-2"><i class="fas fa-calendar-alt"></i></span>
-                                  <span class="text-nowrap"><?= date('d-m-Y') ?></span>
+                                  <!-- <span class="text-success mr-2"><i class="fas fa-calendar-alt"></i></span> -->
+                                  <!-- <span class="text-nowrap"><?= date('d-m-Y') ?></span> -->
                               </p>
                           </div>
                       </div>
@@ -78,18 +78,18 @@
                           <div class="card-body">
                               <div class="row">
                                   <div class="col">
-                                      <h5 class="card-title text-uppercase text-muted mb-0">Farmasi</h5>
-                                      <span class="h2 font-weight-bold mb-0"><?= $sisa_antrian_farmasi ?></span>
+                                      <h5 class="card-title text-uppercase text-muted mb-0">Jam</h5>
+                                      <span class="h2 font-weight-bold mb-0"><span id="jam"></span> : <span id="menit"></span> : <span id="detik"></span></span>
                                   </div>
                                   <div class="col-auto">
                                       <div class="icon icon-shape bg-gradient-orange text-white rounded-circle shadow">
-                                          <i class="fas fa-pills"></i>
+                                          <i class="fas fa-clock"></i>
                                       </div>
                                   </div>
                               </div>
                               <p class="mt-3 mb-0 text-sm">
-                                  <span class="text-success mr-2"><i class="fas fa-calendar-alt"></i></span>
-                                  <span class="text-nowrap"><?= date('d-m-Y') ?></span>
+                                  <!-- <span class="text-success mr-2"><i class="fas fa-calendar-alt"></i></span> -->
+                                  <!-- <span class="text-nowrap"><?= date('d-m-Y') ?></span> -->
                               </p>
                           </div>
                       </div>
