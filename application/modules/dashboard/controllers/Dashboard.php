@@ -126,6 +126,8 @@ class Dashboard extends MX_Controller
                     $asalRujukan = $resultarr_cariBnokartu['asalFaskes'];
                     $ppkRujukan = $resultarr_cariBnokartu['rujukan']['provPerujuk']['kode'];
                     $diagAwalcariBnokartu = $resultarr_cariBnokartu['rujukan']['diagnosa']['kode'];
+                    $noTelepon = $resultarr_cariBnokartu['rujukan']['peserta']['mr']['noTelepon'];
+                    $namappkRujukan = $resultarr_cariBnokartu['rujukan']['provPerujuk']['nama'];
                     // $data['data_peserta'] = $resultarr6;
                 } else if ($resultarr['metaData']['message'] == 'Rujukan Tidak Ada') {
                     // echo json_encode($resultarr['metaData']['message']);
@@ -153,6 +155,9 @@ class Dashboard extends MX_Controller
                     $tglRujukan = $resultarr_cariBnokartu['rujukan']['tglKunjungan'];
                     $asalRujukan = $resultarr_cariBnokartu['asalFaskes'];
                     $ppkRujukan = $resultarr_cariBnokartu['rujukan']['provPerujuk']['kode'];
+                    $diagAwalcariBnokartu = $resultarr_cariBnokartu['rujukan']['diagnosa']['kode'];
+                    $noTelepon = $resultarr_cariBnokartu['rujukan']['peserta']['mr']['noTelepon'];
+                    $namappkRujukan = $resultarr_cariBnokartu['rujukan']['provPerujuk']['nama'];
                 } else {
                     echo $resultarr['metaData']['message'];
                 }
@@ -361,11 +366,35 @@ class Dashboard extends MX_Controller
                 $datapoli = $this->db->get_where('simrsj_master.ruangan', ['kode_ruangan' => $databooking['kodepoli']])->row_array();
                 $datadokter = $this->db->get_where('simrsj_master.pegawai', ['kode_dpjp' => $databooking['kodedokter']])->row_array();
                 $cekkunjungan = $this->db->get_where('simrsj_aplikasi.pasien_kunjungan', ['id_pasien' => $datapasien['id_pasien'], 'tanggal_registrasi' => $databooking['tanggalperiksa']])->row_array();
+                if ($datapasien['tanggal_lahir'] == '0') {
+                    $jeniskelamin = 'Perempuan';
+                } else {
+                    $jeniskelamin = 'Laki-laki';
+                }
+                $birthDate = new DateTime($datapasien['tanggal_lahir']);
+                $today = new DateTime("today");
+                if ($birthDate > $today) {
+                    exit("0 tahun 0 bulan 0 hari");
+                }
+                $ut = $today->diff($birthDate)->y;
+                $ub = $today->diff($birthDate)->m;
+                $uh = $today->diff($birthDate)->d;
                 if ($cekkunjungan) {
+                    $ceksep = $this->db->get_where('simrsj_aplikasi.bpjs_sep', ['no_registrasi' => $cekkunjungan['no_registrasi']])->row_array();
                     echo json_encode([
                         'metadata' => [
+                            'code' => 201,
                             'message' => 'Kunjungan Sudah Ada',
-                            'code' => 201
+                            'nosep' => $ceksep['noSep'],
+                            'kodebooking' => $databooking['kodebooking'],
+                            'nomorkartu' => $databooking['nomorkartu'],
+                            'nomr' => $databooking['norm'],
+                            'noantrean' => $databooking['nomorantrean'],
+                            'namapasien' => $databooking['namapasien'],
+                            'tgllahir' => $datapasien['tanggal_lahir'],
+                            'jeniskelamin' => $jeniskelamin,
+                            'ut' => $ut,
+                            'dokter' => $datadokter['gelar_depan'] . $datadokter['nama_pegawai'] . $datadokter['gelar_belakang'],
                         ],
                     ], 201);
                 } else {
@@ -375,14 +404,7 @@ class Dashboard extends MX_Controller
                         $tgl_regis = $databooking['tanggalperiksa'];
                         $last_row = $this->db->select('new_record')->order_by('id_kunjungan', "desc")->limit(1)->get_where('pasien_kunjungan', ['tanggal_registrasi' => $tgl_regis, 'jenis_layanan' => 2])->result();
 
-                        $birthDate = new DateTime($datapasien['tanggal_lahir']);
-                        $today = new DateTime("today");
-                        if ($birthDate > $today) {
-                            exit("0 tahun 0 bulan 0 hari");
-                        }
-                        $ut = $today->diff($birthDate)->y;
-                        $ub = $today->diff($birthDate)->m;
-                        $uh = $today->diff($birthDate)->d;
+
 
                         if ($last_row) {
                             foreach ($last_row as $row) {
@@ -449,6 +471,56 @@ class Dashboard extends MX_Controller
 
                         $this->Rajal_model->tambah_kunjungan($datakunjungan);
 
+                        if ($tujuanKunj == '1') {
+                            $tk = 'Kunjungan Pertama';
+                            $fp = 'Tidak ada';
+                            $kp = 'Tidak ada';
+                            $kp = 'Tidak ada';
+                            $ap = 'Tidak ada';
+                        } else {
+                            $tk = 'Konsul Dokter';
+                            $fp = 'Tidak ada';
+                            $kp = 'Tidak ada';
+                            $ap = 'Tujuan Kontrol';
+                        }
+
+                        $dataSep = array(
+                            'no_registrasi' => $no_registrasi,
+                            'noSep'         => $resultarr_sep['sep']['noSep'],
+                            'tglSep'        => $resultarr_sep['sep']['tglSep'],
+                            'jnsPelayanan'  => $resultarr_sep['sep']['jnsPelayanan'],
+                            'kelasRawat'    => $resultarr_sep['sep']['kelasRawat'],
+                            'kodeDiagnosa'  => $diagAwal,
+                            'diagnosa'      => $resultarr_sep['sep']['diagnosa'],
+                            'noRujukan'     => $resultarr_sep['sep']['noRujukan'],
+                            'poli'          => $resultarr_sep['sep']['poli'],
+                            'poliEksekutif' => $resultarr_sep['sep']['poliEksekutif'],
+                            'catatan'       => $resultarr_sep['sep']['catatan'],
+                            'penjamin'      => $resultarr_sep['sep']['penjamin'],
+                            'noKartu'       => $resultarr_sep['sep']['peserta']['noKartu'],
+                            'nama'          => $resultarr_sep['sep']['peserta']['nama'],
+                            'tglLahir'      => $resultarr_sep['sep']['peserta']['tglLahir'],
+                            'noMr'          => $resultarr_sep['sep']['peserta']['noMr'],
+                            'kelamin'       => $resultarr_sep['sep']['peserta']['kelamin'],
+                            'jnsPeserta'    => $resultarr_sep['sep']['peserta']['jnsPeserta'],
+                            'hakKelas'      => $resultarr_sep['sep']['peserta']['hakKelas'],
+                            'asuransi'      => $resultarr_sep['sep']['peserta']['asuransi'],
+                            'dinsos'        => '-',
+                            'prolanisPRB'   => '-',
+                            'noSKTM'        => '-',
+                            'dokter'        => $datadokter['gelar_depan'] . $datadokter['nama_pegawai'] . $datadokter['gelar_belakang'],
+                            'faskesPerujuk' => $namappkRujukan,
+                            'noTelepon'     => $noTelepon,
+                            'kelasRawatNaik' => '-',
+                            'pembiayaan'    => '-',
+                            'tujuanKunj'    => $tk,
+                            'flagProcedure' => $fp,
+                            'kodePenunjang' => $kp,
+                            'assesmentPel'  => $ap,
+                        );
+
+                        $this->Rajal_model->simpan_hasil_sep($dataSep);
+
                         $this->Antrian_model->ubah_antrian_checkin($kodebooking, $dataantrian);
 
                         $kodebooking = $_POST['kodebooking'];
@@ -469,16 +541,13 @@ class Dashboard extends MX_Controller
 
                         // $msg = $_POST['no_registrasi'] . ' Nama : ' . $_POST['nama_pasien'];
                         // echo $msg;
-                        if ($datapasien['tanggal_lahir'] == '0') {
-                            $jeniskelamin = 'Perempuan';
-                        } else {
-                            $jeniskelamin = 'Laki-laki';
-                        }
+
 
                         echo json_encode([
                             'metadata' => [
                                 'code' => '200',
                                 'sep' => $resultarr_sep['sep'],
+                                'dbsep' => $dataSep,
                                 'kodebooking' => $databooking['kodebooking'],
                                 'nomorkartu' => $databooking['nomorkartu'],
                                 'nomr' => $databooking['norm'],
@@ -505,6 +574,77 @@ class Dashboard extends MX_Controller
                 ],
             ], 201);
         }
+    }
+
+    public function lembarSepPrint($noSep)
+    {
+        $data['title'] = 'Lembar SEP';
+        $data['user'] = $this->db->get_where('user', ['username' => $this->session->userdata('username')])->row_array();
+        $dataconsid = getenv('BPJS_VCLAIM_CONSID');
+        $secretKey = getenv('BPJS_VCLAIM_SIGNATURE');
+        $user_key = getenv('BPJS_VCAIM_USERKEY');
+
+        date_default_timezone_set('UTC');
+        $tStamp = strval(time() - strtotime('1970-01-01 00:00:00'));
+
+        $signature = hash_hmac('sha256', $dataconsid . "&" . $tStamp, $secretKey, true);
+        $encodedSignature = base64_encode($signature);
+
+        $ch = curl_init();
+        $ch2 = curl_init();
+        $headers = [
+            'X-cons-id: ' . $dataconsid . '',
+            'X-timestamp: ' . $tStamp . '',
+            'X-signature: ' . $encodedSignature . '',
+            'User-key: ' . $user_key . '',
+            'Content-Type: Application/x-www-form-urlencoded',
+        ];
+        $tgl = date('Y-m-d');
+        curl_setopt($ch, CURLOPT_URL, getenv('BPJS_VCLAIM_URL') . "SEP/" . $noSep);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 3);
+        curl_setopt($ch, CURLOPT_HTTPGET, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        $content = curl_exec($ch);
+        curl_close($ch);
+
+
+
+        $resultarr = json_decode($content, true);
+        $key = '' . $dataconsid . '' . $secretKey . '' . $tStamp . '';
+        $encrypt_method = 'AES-256-CBC';
+        $key_hash = hex2bin(hash('sha256', $key));
+        $iv = substr(hex2bin(hash('sha256', $key)), 0, 16);
+        $output = openssl_decrypt(base64_decode($resultarr['response']), $encrypt_method, $key_hash, OPENSSL_RAW_DATA, $iv);
+        $output2  = \LZCompressor\LZString::decompressFromEncodedURIComponent($output);
+        $resultarr2 = json_decode($output2, true);
+
+        curl_setopt($ch2, CURLOPT_URL, getenv('BPJS_VCLAIM_URL') . "Peserta/nokartu/" . $resultarr2['peserta']['noKartu'] . "/tglSEP/" . $tgl);
+        curl_setopt($ch2, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch2, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch2, CURLOPT_TIMEOUT, 3);
+        curl_setopt($ch2, CURLOPT_HTTPGET, 1);
+        curl_setopt($ch2, CURLOPT_SSL_VERIFYPEER, false);
+        $content2 = curl_exec($ch2);
+        // $err = curl_error($ch);
+        curl_close($ch2);
+
+        $resultarr5 = json_decode($content2, true);
+        $key = '' . $dataconsid . '' . $secretKey . '' . $tStamp . '';
+        $encrypt_method = 'AES-256-CBC';
+        $key_hash = hex2bin(hash('sha256', $key));
+        $iv = substr(hex2bin(hash('sha256', $key)), 0, 16);
+        $output = openssl_decrypt(base64_decode($resultarr5['response']), $encrypt_method, $key_hash, OPENSSL_RAW_DATA, $iv);
+        $output5  = \LZCompressor\LZString::decompressFromEncodedURIComponent($output);
+        $resultarr6 = json_decode($output5, true);
+
+        $data['data_sep'] = $resultarr2;
+        $data['data_peserta'] = $resultarr6;
+
+        $data['content'] = '';
+        $page = 'dashboard/lembar_sep_rajal';
+        $this->load->view($page, $data);
     }
 
     public function prosesNoRegistrasiBPJS()

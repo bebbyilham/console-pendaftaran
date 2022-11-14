@@ -163,7 +163,7 @@
                       <div class="display-2 text-white my-4"><img src="<?php echo base_url('assets/logo/bpjswhite128.png'); ?>" alt="logobpjs"></div>
                   </div>
                   <div class="card-footer bg-transparent">
-                      <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#modal-daftar-jkn">DAFTAR</button>
+                      <button type="button" id="daftar-jkn" class="btn btn-primary mb-3" data-toggle="modal" data-target="#modal-daftar-jkn">DAFTAR</button>
                       <div class="modal fade" id="modal-daftar-jkn" tabindex="-1" role="dialog" aria-labelledby="modal-daftar-jkn" aria-hidden="true">
                           <div class="modal-dialog modal-danger modal-dialog-centered modal-" role="document">
                               <div class="modal-content bg-gradient-success">
@@ -279,9 +279,14 @@
               //connect qz-tray
               qz.websocket.connect()
 
+              $('#daftar-jkn').on('click', function() {
+                  $('#kodebookingjkn').val('');
+              });
+
               $('#btn_cek_kodebooking').on('click', function() {
                   var kodebooking = $('#kodebookingjkn').val();
-                  //   $('#btn_cek_kodebooking').attr('disabled', true);
+                  $('#btn_cek_kodebooking').attr('disabled', true);
+
                   $.ajax({
                       url: '<?php echo base_url(); ?>dashboard/cekDataKodebooking',
                       method: 'POST',
@@ -290,7 +295,7 @@
                       },
                       dataType: 'JSON',
                       success: function(data) {
-                          //   $('#btn_cek_kodebooking').attr('disabled', false);
+                          $('#btn_cek_kodebooking').attr('disabled', false);
                           weHaveSuccess = true;
                           console.log('sep :', data);
                           //   console.log('1. :', data.metadata.sep.noSep);
@@ -314,8 +319,9 @@
                               var nama_pasien = namapasien;
                               var umur_tahun = ut
                               var jenis_kelamin = jeniskelamin
+                              var no_mr = data.metadata.nomr;
                               qz.printers.find("Label").then(function(found) {
-                                  toastr["success"](found);
+                                  console.log(found);
                               });
 
                               qz.printers.find("Label").then(function(printer) {
@@ -328,6 +334,12 @@
                                       '^FO130,40^FWN^FD' + '   :' + nama_pasien + ' ( ' + jenis_kelamin + ' - ' + umur_tahun + ' TH)' + '^FS',
                                       '^BY2,2,60',
                                       '^FO150,70^B3N,N,90,Y^FD' + no_sep + '^FS^',
+                                      'XZ',
+                                      '^XA',
+                                      '^CF0,30,20',
+                                      '^FO200,40^FWN^FD' + '   :' + nama_pasien + ' ( ' + jenis_kelamin + ' - ' + umur_tahun + ' TH)' + '^FS',
+                                      '^BY4,2,60',
+                                      '^FO220,70^B3N,N,90,Y^FD' + no_mr + '^FS^',
                                       'XZ'
                                   ];
                                   return qz.print(config, nomorsep);
@@ -336,32 +348,6 @@
                                   toastr["error"]("Printer Tidak Ditemukan");
                               });
 
-                              var no_mr = data.metadata.nomr;
-
-                              var nama_pasien = data.metadata.namapasien
-                              var umur_tahun = ut
-                              var jenis_kelamin = jenis_kelamin
-                              qz.printers.find("Label").then(function(found) {
-                                  toastr["success"](found);
-                              });
-
-                              qz.printers.find("Label").then(function(printer) {
-                                  // Create a default config for the found printer
-                                  var config = qz.configs.create(printer);
-
-                                  // Raw ZPL
-                                  var nomormr = ['^XA',
-                                      '^CF0,30,20',
-                                      '^FO200,40^FWN^FD' + '   :' + nama_pasien + ' ( ' + jenis_kelamin + ' - ' + umur_tahun + ' TH)' + '^FS',
-                                      '^BY4,2,60',
-                                      '^FO220,70^B3N,N,90,Y^FD' + no_mr + '^FS^',
-                                      'XZ'
-                                  ];
-                                  return qz.print(config, nomormr);
-                              }).catch(function(e) {
-                                  // console.error(e);
-                                  toastr["error"]("Printer Tidak Ditemukan");
-                              });
                               //RECEIPT
                               qz.printers.find("Receipt").then(function(printer) {
                                   // Create a default config for the found printer
@@ -369,6 +355,8 @@
 
                                   // Raw ZPL
                                   var angka = noantrean;
+                                  console.log(nosep);
+                                  var no_sep = nosep;
                                   var today = new Date();
                                   var month = today.getMonth() + 1;
                                   var time = today.getDate() + "/" + month + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
@@ -376,7 +364,7 @@
                                       '\x1B' + '\x40', // init
                                       '\x1B' + '\x61' + '\x31', // center align
                                       '\x1B' + '\x4D' + '\x30', // normal text
-                                      'ANTRIAN POLI PASIEN' + '\x0A',
+                                      'ANTRIAN POLI' + '\x0A',
                                       'RS JIWA PROF HB SAANIN PADANG' + '\x0A',
                                       '\x1B' + '\x21' + '\x0A' + '\x1B' + '\x45' + '\x0A', // em mode off
                                       '\x0A',
@@ -405,7 +393,7 @@
                                   ];
                                   return qz.print(config, data);
                               }).catch(function(e) {
-                                  //   console.log(e);
+                                  console.log(e);
                                   //   alert("Printer Tidak Ditemukan");
                                   Swal.fire({
                                       icon: 'error',
@@ -413,24 +401,190 @@
                                       text: data.metadata.message,
                                   });
                               });
+                              qz.printers.find("Receipt").then(function(printer) {
+                                  // Create a default config for the found printer
+                                  var config = qz.configs.create(printer);
+                                  console.log(nosep);
+                                  var no_sep = nosep;
 
-                          } else {
-                              Swal.fire({
-                                  icon: 'error',
-                                  title: 'Data Tidak Ditemukan',
-                                  text: data.metadata.message,
+                                  // Raw ZPL
+                                  // var angka = noantrean;
+                                  var today = new Date();
+                                  var month = today.getMonth() + 1;
+                                  var time = today.getDate() + "/" + month + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+                                  var data = [{
+                                      type: 'pixel',
+                                      format: 'pdf',
+                                      flavor: 'file',
+                                      data: '<?= base_url('dashboard/lembarSepPrint/') ?>' + nosep
+                                  }];
+                                  return qz.print(config, data);
+                              }).catch(function(e) {
+                                  console.log(e);
+                                  //   alert("Printer Tidak Ditemukan");
+                                  Swal.fire({
+                                      icon: 'error',
+                                      title: 'Printer Tidak Ditemukan',
+                                      text: data.metadata.message,
+                                  });
+
                               });
+                              $('#modal-kodebooking-jkn').modal('hide');
+                          } else {
+                              if (data.metadata.message == 'Kunjungan Sudah Ada') {
+                                  console.log('Kunjungan Ada :', data);
+                                  var ceknosep = data.metadata.nosep
+                                  var ceknoantrean = data.metadata.noantrean
+                                  var cekdokter = data.metadata.dokter
+                                  var namapasien = data.metadata.namapasien
+                                  var ut = data.metadata.ut
+                                  var mr = data.metadata.nomr
+                                  var jeniskelamin = data.metadata.jeniskelamin
+                                  Swal.fire({
+                                      title: data.metadata.message,
+                                      text: "Apakah anda ingin mencetak Label, SEP, dan Bukti Registrasi ?",
+                                      icon: 'warning',
+                                      showCancelButton: true,
+                                      confirmButtonColor: '#3085d6',
+                                      cancelButtonColor: '#d33',
+                                      confirmButtonText: 'Ya',
+                                      cancelButtonText: 'Tidak'
+                                  }).then((result) => {
+                                      if (result.isConfirmed) {
+                                          //LABEL
+                                          var no_sep = ceknosep;
 
+                                          var nama_pasien = namapasien;
+                                          var umur_tahun = ut
+                                          var jenis_kelamin = jeniskelamin
+                                          var no_mr = mr;
+                                          qz.printers.find("Label").then(function(found) {
+                                              console.log(found);
+                                          });
+
+                                          qz.printers.find("Label").then(function(printer) {
+                                              // Create a default config for the found printer
+                                              var config = qz.configs.create(printer);
+
+                                              // Raw ZPL
+                                              var nomorsep = ['^XA',
+                                                  '^CF0,30,20',
+                                                  '^FO130,40^FWN^FD' + '   :' + nama_pasien + ' ( ' + jenis_kelamin + ' - ' + umur_tahun + ' TH)' + '^FS',
+                                                  '^BY2,2,60',
+                                                  '^FO150,70^B3N,N,90,Y^FD' + no_sep + '^FS^',
+                                                  'XZ',
+                                                  '^XA',
+                                                  '^CF0,30,20',
+                                                  '^FO200,40^FWN^FD' + '   :' + nama_pasien + ' ( ' + jenis_kelamin + ' - ' + umur_tahun + ' TH)' + '^FS',
+                                                  '^BY4,2,60',
+                                                  '^FO220,70^B3N,N,90,Y^FD' + no_mr + '^FS^',
+                                                  'XZ'
+                                              ];
+                                              return qz.print(config, nomorsep);
+                                          }).catch(function(e) {
+                                              console.error(e);
+                                              toastr["error"]("Printer Tidak Ditemukan");
+                                          });
+                                          //RECEIPT
+                                          qz.printers.find("Receipt").then(function(printer) {
+                                              // Create a default config for the found printer
+                                              var config = qz.configs.create(printer);
+
+                                              // Raw ZPL
+                                              var angka = ceknoantrean;
+                                              var no_sep = ceknosep;
+                                              var today = new Date();
+                                              var month = today.getMonth() + 1;
+                                              var time = today.getDate() + "/" + month + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+                                              var data = [
+                                                  '\x1B' + '\x40', // init
+                                                  '\x1B' + '\x61' + '\x31', // center align
+                                                  '\x1B' + '\x4D' + '\x30', // normal text
+                                                  'ANTRIAN POLI' + '\x0A',
+                                                  'RS JIWA PROF HB SAANIN PADANG' + '\x0A',
+                                                  '\x1B' + '\x21' + '\x0A' + '\x1B' + '\x45' + '\x0A', // em mode off
+                                                  '\x0A',
+                                                  '\x0A',
+                                                  '\x0A',
+                                                  '\x1B' + '\x45' + '\x0D', // bold on
+                                                  'ONLINE' + '\x0A',
+                                                  '\x1B' + '\x45' + '\x0A', // bold off
+                                                  'Nomor Antrian :' + '\x0A',
+                                                  '\x0A',
+                                                  '\x1B' + '\x21' + '\x30', //em mode off
+                                                  '\x1B' + '\x45' + '\x0D', // bold on
+                                                  '' + angka + '\x0A',
+                                                  '\x1B' + '\x45' + '\x0A', // bold off
+                                                  '\x1B' + '\x21' + '\x0A' + '\x1B' + '\x45' + '\x0A', // em mode off
+                                                  '\x0A',
+                                                  '' + time + '\x0A',
+                                                  '' + '' + '\x0A',
+                                                  '' + '*) Silakan menunggu antrean poli' + '\x0A',
+                                                  '' + cekdokter + '\x0A',
+                                                  '\x0A' + '\x0A',
+                                                  '\x1B' + '\x61' + '\x30', // left align
+                                                  '\x0A' + '\x0A' + '\x0A' + '\x0A' + '\x0A' + '\x0A' + '\x0A',
+                                                  '\x1B' + '\x69', // cut paper 
+                                                  '\x10' + '\x14' + '\x01' + '\x00' + '\x05',
+                                              ];
+                                              return qz.print(config, data);
+                                          }).catch(function(e) {
+                                              console.log(e);
+                                              //   alert("Printer Tidak Ditemukan");
+                                              Swal.fire({
+                                                  icon: 'error',
+                                                  title: 'Printer Tidak Ditemukan',
+                                                  text: data.metadata.message,
+                                              });
+                                          });
+                                          qz.printers.find("Receipt").then(function(printer) {
+                                              // Create a default config for the found printer
+                                              var config = qz.configs.create(printer);
+                                              console.log(nosep);
+                                              var no_sep = nosep;
+
+                                              // Raw ZPL
+                                              // var angka = noantrean;
+                                              var today = new Date();
+                                              var month = today.getMonth() + 1;
+                                              var time = today.getDate() + "/" + month + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+                                              var data = [{
+                                                  type: 'pixel',
+                                                  format: 'pdf',
+                                                  flavor: 'file',
+                                                  data: '<?= base_url('dashboard/lembarSepPrint/') ?>' + ceknosep
+                                              }];
+                                              return qz.print(config, data);
+                                          }).catch(function(e) {
+                                              console.log(e);
+                                              //   alert("Printer Tidak Ditemukan");
+                                              Swal.fire({
+                                                  icon: 'error',
+                                                  title: 'Printer Tidak Ditemukan',
+                                                  text: data.metadata.message,
+                                              });
+
+                                          });
+                                          $('#modal-kodebooking-jkn').modal('hide');
+
+                                      }
+                                  })
+                              } else {
+                                  Swal.fire({
+                                      icon: 'error',
+                                      title: 'Data Tidak Ditemukan',
+                                      text: data.metadata.message,
+                                  });
+                              }
                           }
                       },
                       error: function(error) {
-                          alert("Request time out! " + xhr.status);
-                          //   $('#btn_cek_kodebooking').attr('disabled', false);
+                          $('#btn_cek_kodebooking').attr('disabled', false);
                       },
                       complete: function() {
-                          //   $('#btn_cek_kodebooking').attr('disabled', false);
+                          $('#btn_cek_kodebooking').attr('disabled', false);
                           if (!weHaveSuccess) {
-                              //   $('#btn_cek_kodebooking').attr('disabled', false);
+                              $('#btn_cek_kodebooking').attr('disabled', false);
                               alert('Silahkan coba lagi!');
                           }
 
