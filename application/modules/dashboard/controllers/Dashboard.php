@@ -39,7 +39,12 @@ class Dashboard extends MX_Controller
     public function cekDataKodebooking()
     {
         $kodebooking = $_POST['kodebooking'];
-        $databooking = $this->db->get_where('simrsj_webservice.antrean', ['kodebooking' => $kodebooking])->row_array();
+        // $databooking = $this->db->select('*')->from('simrsj_webservice.antrean')->where(['kodebooking' => $kodebooking])->or_where(['norm' => $kodebooking])->result();
+        $databooking = $this->db->select('*')
+            ->order_by('tanggalperiksa', "desc")->limit(1)
+            ->like('kodebooking', $kodebooking)
+            ->or_like('norm',  preg_replace("/-/", "", $kodebooking))
+            ->get('simrsj_webservice.antrean')->row_array();
         if ($databooking) {
             if ($databooking['tanggalperiksa'] != date('Y-m-d')) {
                 echo json_encode([
@@ -469,7 +474,7 @@ class Dashboard extends MX_Controller
                             'checkin'           => 2,
                         );
 
-                        $this->Rajal_model->tambah_kunjungan($datakunjungan);
+
 
                         if ($tujuanKunj == '1') {
                             $tk = 'Kunjungan Pertama';
@@ -483,82 +488,88 @@ class Dashboard extends MX_Controller
                             $kp = 'Tidak ada';
                             $ap = 'Tujuan Kontrol';
                         }
-
-                        $dataSep = array(
-                            'no_registrasi' => $no_registrasi,
-                            'noSep'         => $resultarr_sep['sep']['noSep'],
-                            'tglSep'        => $resultarr_sep['sep']['tglSep'],
-                            'jnsPelayanan'  => $resultarr_sep['sep']['jnsPelayanan'],
-                            'kelasRawat'    => $resultarr_sep['sep']['kelasRawat'],
-                            'kodeDiagnosa'  => $diagAwal,
-                            'diagnosa'      => $resultarr_sep['sep']['diagnosa'],
-                            'noRujukan'     => $resultarr_sep['sep']['noRujukan'],
-                            'poli'          => $resultarr_sep['sep']['poli'],
-                            'poliEksekutif' => $resultarr_sep['sep']['poliEksekutif'],
-                            'catatan'       => $resultarr_sep['sep']['catatan'],
-                            'penjamin'      => $resultarr_sep['sep']['penjamin'],
-                            'noKartu'       => $resultarr_sep['sep']['peserta']['noKartu'],
-                            'nama'          => $resultarr_sep['sep']['peserta']['nama'],
-                            'tglLahir'      => $resultarr_sep['sep']['peserta']['tglLahir'],
-                            'noMr'          => $resultarr_sep['sep']['peserta']['noMr'],
-                            'kelamin'       => $resultarr_sep['sep']['peserta']['kelamin'],
-                            'jnsPeserta'    => $resultarr_sep['sep']['peserta']['jnsPeserta'],
-                            'hakKelas'      => $resultarr_sep['sep']['peserta']['hakKelas'],
-                            'asuransi'      => $resultarr_sep['sep']['peserta']['asuransi'],
-                            'dinsos'        => '-',
-                            'prolanisPRB'   => '-',
-                            'noSKTM'        => '-',
-                            'dokter'        => $datadokter['gelar_depan'] . $datadokter['nama_pegawai'] . $datadokter['gelar_belakang'],
-                            'faskesPerujuk' => $namappkRujukan,
-                            'noTelepon'     => $noTelepon,
-                            'kelasRawatNaik' => '-',
-                            'pembiayaan'    => '-',
-                            'tujuanKunj'    => $tk,
-                            'flagProcedure' => $fp,
-                            'kodePenunjang' => $kp,
-                            'assesmentPel'  => $ap,
-                        );
-
-                        $this->Rajal_model->simpan_hasil_sep($dataSep);
-
-                        $this->Antrian_model->ubah_antrian_checkin($kodebooking, $dataantrian);
-
-                        $kodebooking = $_POST['kodebooking'];
-                        $cektask = $this->db->get_where('simrsj_webservice.task_antrean', ['kode_booking' => $kodebooking])->result();
-                        if ($cektask) {
-                            $data1 = array(
-                                'task_3' => date("Y-m-d H:i:s")
+                        if ($resultarr_sep['metaData']['code'] == 200) {
+                            $dataSep = array(
+                                'no_registrasi' => $no_registrasi,
+                                'noSep'         => $resultarr_sep['sep']['noSep'],
+                                'tglSep'        => $resultarr_sep['sep']['tglSep'],
+                                'jnsPelayanan'  => $resultarr_sep['sep']['jnsPelayanan'],
+                                'kelasRawat'    => $resultarr_sep['sep']['kelasRawat'],
+                                'kodeDiagnosa'  => $diagAwal,
+                                'diagnosa'      => $resultarr_sep['sep']['diagnosa'],
+                                'noRujukan'     => $resultarr_sep['sep']['noRujukan'],
+                                'poli'          => $resultarr_sep['sep']['poli'],
+                                'poliEksekutif' => $resultarr_sep['sep']['poliEksekutif'],
+                                'catatan'       => $resultarr_sep['sep']['catatan'],
+                                'penjamin'      => $resultarr_sep['sep']['penjamin'],
+                                'noKartu'       => $resultarr_sep['sep']['peserta']['noKartu'],
+                                'nama'          => $resultarr_sep['sep']['peserta']['nama'],
+                                'tglLahir'      => $resultarr_sep['sep']['peserta']['tglLahir'],
+                                'noMr'          => $resultarr_sep['sep']['peserta']['noMr'],
+                                'kelamin'       => $resultarr_sep['sep']['peserta']['kelamin'],
+                                'jnsPeserta'    => $resultarr_sep['sep']['peserta']['jnsPeserta'],
+                                'hakKelas'      => $resultarr_sep['sep']['peserta']['hakKelas'],
+                                'asuransi'      => $resultarr_sep['sep']['peserta']['asuransi'],
+                                'dinsos'        => '-',
+                                'prolanisPRB'   => '-',
+                                'noSKTM'        => '-',
+                                'dokter'        => $datadokter['gelar_depan'] . $datadokter['nama_pegawai'] . $datadokter['gelar_belakang'],
+                                'faskesPerujuk' => $namappkRujukan,
+                                'noTelepon'     => $noTelepon,
+                                'kelasRawatNaik' => '-',
+                                'pembiayaan'    => '-',
+                                'tujuanKunj'    => $tk,
+                                'flagProcedure' => $fp,
+                                'kodePenunjang' => $kp,
+                                'assesmentPel'  => $ap,
                             );
-                            $this->Antrian_model->update_task_antrian($kodebooking, $data1);
+                            $this->Rajal_model->tambah_kunjungan($datakunjungan);
+
+                            $this->Rajal_model->simpan_hasil_sep($dataSep);
+
+                            $this->Antrian_model->ubah_antrian_checkin($kodebooking, $dataantrian);
+
+                            $kodebooking = $_POST['kodebooking'];
+                            $cektask = $this->db->get_where('simrsj_webservice.task_antrean', ['kode_booking' => $kodebooking])->result();
+                            if ($cektask) {
+                                $data1 = array(
+                                    'task_3' => date("Y-m-d H:i:s")
+                                );
+                                $this->Antrian_model->update_task_antrian($kodebooking, $data1);
+                            } else {
+                                $data2 = array(
+                                    'kode_booking' => $kodebooking,
+                                    'task_3' => date("Y-m-d H:i:s"),
+                                    'tgl_kunjungan' => date('Y-m-d')
+                                );
+                                $this->Antrian_model->create_task_antrian($data2);
+                            }
+
+                            // $msg = $_POST['no_registrasi'] . ' Nama : ' . $_POST['nama_pasien'];
+                            // echo $msg;
+
+
+                            echo json_encode([
+                                'metadata' => [
+                                    'code' => '200',
+                                    'sep' => $resultarr_sep['sep'],
+                                    'dbsep' => $dataSep,
+                                    'kodebooking' => $databooking['kodebooking'],
+                                    'nomorkartu' => $databooking['nomorkartu'],
+                                    'nomr' => $databooking['norm'],
+                                    'noantrean' => $databooking['nomorantrean'],
+                                    'namapasien' => $databooking['namapasien'],
+                                    'tgllahir' => $datapasien['tanggal_lahir'],
+                                    'jeniskelamin' => $jeniskelamin,
+                                    'ut' => $ut,
+                                    'dokter' => $datadokter['gelar_depan'] . $datadokter['nama_pegawai'] . $datadokter['gelar_belakang'],
+                                ],
+                            ], 201);
                         } else {
-                            $data2 = array(
-                                'kode_booking' => $kodebooking,
-                                'task_3' => date("Y-m-d H:i:s"),
-                                'tgl_kunjungan' => date('Y-m-d')
-                            );
-                            $this->Antrian_model->create_task_antrian($data2);
+                            echo json_encode([
+                                'metadata' => $resultarr_sep['metaData'],
+                            ], 201);
                         }
-
-                        // $msg = $_POST['no_registrasi'] . ' Nama : ' . $_POST['nama_pasien'];
-                        // echo $msg;
-
-
-                        echo json_encode([
-                            'metadata' => [
-                                'code' => '200',
-                                'sep' => $resultarr_sep['sep'],
-                                'dbsep' => $dataSep,
-                                'kodebooking' => $databooking['kodebooking'],
-                                'nomorkartu' => $databooking['nomorkartu'],
-                                'nomr' => $databooking['norm'],
-                                'noantrean' => $databooking['nomorantrean'],
-                                'namapasien' => $databooking['namapasien'],
-                                'tgllahir' => $datapasien['tanggal_lahir'],
-                                'jeniskelamin' => $jeniskelamin,
-                                'ut' => $ut,
-                                'dokter' => $datadokter['gelar_depan'] . $datadokter['nama_pegawai'] . $datadokter['gelar_belakang'],
-                            ],
-                        ], 201);
                     } else {
                         echo json_encode([
                             'metadata' => $resultarr['metaData'],
