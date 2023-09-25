@@ -206,7 +206,7 @@
                                                           <div class="input-group-prepend">
                                                               <span class="input-group-text"><i class="ni ni-collection"></i></span>
                                                           </div>
-                                                          <input id="kodebookingjkn" class="form-control" placeholder="Kode Booking atau No. MR ">
+                                                          <input id="kodebookingjkn" class="form-control" placeholder="Kode Booking / No. MR / No. BPJS ">
                                                       </div>
                                                   </div>
                                                   <!-- <div class="form-group">
