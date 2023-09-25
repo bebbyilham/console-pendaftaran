@@ -439,40 +439,40 @@
                                       cancelButtonText: 'Tidak'
                                   }).then((result) => {
                                       if (result.isConfirmed) {
-                                          //LABEL
-                                          var no_sep = ceknosep;
+                                          //   //LABEL
+                                          //   var no_sep = ceknosep;
 
-                                          var nama_pasien = namapasien;
-                                          var umur_tahun = ut
-                                          var jenis_kelamin = jeniskelamin
-                                          var no_mr = mr;
-                                          qz.printers.find("Label").then(function(found) {
-                                              console.log(found);
-                                          });
+                                          //   var nama_pasien = namapasien;
+                                          //   var umur_tahun = ut
+                                          //   var jenis_kelamin = jeniskelamin
+                                          //   var no_mr = mr;
+                                          //   qz.printers.find("Label").then(function(found) {
+                                          //       console.log(found);
+                                          //   });
 
-                                          qz.printers.find("Label").then(function(printer) {
-                                              // Create a default config for the found printer
-                                              var config = qz.configs.create(printer);
+                                          //   qz.printers.find("Label").then(function(printer) {
+                                          //       // Create a default config for the found printer
+                                          //       var config = qz.configs.create(printer);
 
-                                              // Raw ZPL
-                                              var nomorsep = ['^XA',
-                                                  '^CF0,30,20',
-                                                  '^FO130,40^FWN^FD' + '   :' + nama_pasien + ' ( ' + jenis_kelamin + ' - ' + umur_tahun + ' TH)' + '^FS',
-                                                  '^BY2,2,60',
-                                                  '^FO150,70^B3N,N,90,Y^FD' + no_sep + '^FS^',
-                                                  'XZ',
-                                                  '^XA',
-                                                  '^CF0,30,20',
-                                                  '^FO200,40^FWN^FD' + '   :' + nama_pasien + ' ( ' + jenis_kelamin + ' - ' + umur_tahun + ' TH)' + '^FS',
-                                                  '^BY4,2,60',
-                                                  '^FO220,70^B3N,N,90,Y^FD' + no_mr + '^FS^',
-                                                  'XZ'
-                                              ];
-                                              return qz.print(config, nomorsep);
-                                          }).catch(function(e) {
-                                              console.error(e);
-                                              toastr["error"]("Printer Tidak Ditemukan");
-                                          });
+                                          //       // Raw ZPL
+                                          //       var nomorsep = ['^XA',
+                                          //           '^CF0,30,20',
+                                          //           '^FO130,40^FWN^FD' + '   :' + nama_pasien + ' ( ' + jenis_kelamin + ' - ' + umur_tahun + ' TH)' + '^FS',
+                                          //           '^BY2,2,60',
+                                          //           '^FO150,70^B3N,N,90,Y^FD' + no_sep + '^FS^',
+                                          //           'XZ',
+                                          //           '^XA',
+                                          //           '^CF0,30,20',
+                                          //           '^FO200,40^FWN^FD' + '   :' + nama_pasien + ' ( ' + jenis_kelamin + ' - ' + umur_tahun + ' TH)' + '^FS',
+                                          //           '^BY4,2,60',
+                                          //           '^FO220,70^B3N,N,90,Y^FD' + no_mr + '^FS^',
+                                          //           'XZ'
+                                          //       ];
+                                          //       return qz.print(config, nomorsep);
+                                          //   }).catch(function(e) {
+                                          //       console.error(e);
+                                          //       toastr["error"]("Printer Tidak Ditemukan");
+                                          //   });
                                           //RECEIPT
                                           qz.printers.find("Receipt").then(function(printer) {
                                               // Create a default config for the found printer

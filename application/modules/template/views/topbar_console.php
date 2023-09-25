@@ -8,8 +8,13 @@
                 <ul class="navbar-nav align-items-center ml-md-auto">
 
                     <li class="nav-item">
+                        <!-- <div class="col-6 collapse-brand float-left">
+                            <a href="#">
+                                <img src="<?= base_url() ?>assets/logo/logosejiwa.png">
+                            </a>
+                        </div> -->
                         <div class="col text-center">
-                            <a href="#" class="btn btn-sm btn-neutral">Rumah Sakit Jiwa Prof. HB Saanin Padang</a>
+                            <!-- <a href="#" class="btn btn-sm btn-neutral">Rumah Sakit Jiwa Prof. HB Saanin Padang</a> -->
                             <!-- <a href="#" class="btn btn-sm btn-neutral"><span id="jam"></span></a>
                             <a href="#" class="btn btn-sm btn-neutral"><span id="menit"></span></a>
                             <a href="#" class="btn btn-sm btn-neutral"><span id="detik"></span></a> -->
@@ -21,7 +26,11 @@
                     </li>
                     <li class="nav-item">
                         <div class="float-left d-none d-sm-inline-block text-white text-center">
-
+                            <div class="col-6 collapse-brand float-left">
+                                <a href="#">
+                                    <img src="<?= base_url() ?>assets/logo/logosejiwa.png">
+                                </a>
+                            </div>
                             <!-- <h6 class="h2 text-white d-inline-block mb-0">Rumah Sakit Jiwa Prof. HB Saanin Padang</h6> -->
                         </div>
                         <!-- Sidenav toggler -->
