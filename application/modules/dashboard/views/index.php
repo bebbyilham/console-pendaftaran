@@ -50,7 +50,7 @@
                       </div>
                   </div> -->
 
-                  <div class="col-6">
+                  <div class="col-4">
                       <div class="card card-stats">
                           <!-- Card body -->
                           <div class="card-body">
@@ -72,7 +72,17 @@
                           </div>
                       </div>
                   </div>
-                  <div class="col-6">
+                  <div class="col-4">
+                      <div class="card card-stats">
+                          <!-- Card body -->
+                          <div class="text-center p-1">
+                              <a href="#">
+                                  <img src="<?= base_url() ?>assets/logo/logosejiwa.png">
+                              </a>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="col-4">
                       <div class="card card-stats">
                           <!-- Card body -->
                           <div class="card-body">
@@ -296,45 +306,50 @@
                               var nama_pasien = data.metadata.namapasien;
                               var ut = data.metadata.ut;
                               var jeniskelamin = data.metadata.jeniskelamin;
+                              var tgllahir = data.metadata.tgllahir;
+                              var namadokter = data.metadata.dokter;
+                              var nomr = data.metadata.nomr;
+                              var namapoli = data.metadata.namapoli;
+                              var noregistrasi = data.metadata.no_registrasi;
                               Swal.fire({
                                   icon: 'success',
                                   title: 'Data Ditemukan',
                                   text: 'SEP Berhasil diterbitkan',
                               });
-                              //LABEL
-                              var no_sep = nosep;
+                              //   //LABEL
+                              //   var no_sep = nosep;
 
-                              var nama_pasien = namapasien;
-                              var umur_tahun = ut
-                              var jenis_kelamin = jeniskelamin
-                              var no_mr = data.metadata.nomr;
-                              qz.printers.find("Label").then(function(found) {
-                                  console.log(found);
-                              });
+                              //   var nama_pasien = namapasien;
+                              //   var umur_tahun = ut
+                              //   var jenis_kelamin = jeniskelamin
+                              //   var no_mr = data.metadata.nomr;
+                              //   qz.printers.find("Label").then(function(found) {
+                              //       console.log(found);
+                              //   });
 
-                              qz.printers.find("Label").then(function(printer) {
-                                  // Create a default config for the found printer
-                                  var config = qz.configs.create(printer);
+                              //   qz.printers.find("Label").then(function(printer) {
+                              //       // Create a default config for the found printer
+                              //       var config = qz.configs.create(printer);
 
-                                  // Raw ZPL
-                                  var nomorsep = ['^XA',
-                                      '^CF0,30,20',
-                                      '^FO130,40^FWN^FD' + '   :' + nama_pasien + ' ( ' + jenis_kelamin + ' - ' + umur_tahun + ' TH)' + '^FS',
-                                      '^BY2,2,60',
-                                      '^FO150,70^B3N,N,90,Y^FD' + no_sep + '^FS^',
-                                      'XZ',
-                                      '^XA',
-                                      '^CF0,30,20',
-                                      '^FO200,40^FWN^FD' + '   :' + nama_pasien + ' ( ' + jenis_kelamin + ' - ' + umur_tahun + ' TH)' + '^FS',
-                                      '^BY4,2,60',
-                                      '^FO220,70^B3N,N,90,Y^FD' + no_mr + '^FS^',
-                                      'XZ'
-                                  ];
-                                  return qz.print(config, nomorsep);
-                              }).catch(function(e) {
-                                  console.error(e);
-                                  toastr["error"]("Printer Tidak Ditemukan");
-                              });
+                              //       // Raw ZPL
+                              //       var nomorsep = ['^XA',
+                              //           '^CF0,30,20',
+                              //           '^FO130,40^FWN^FD' + '   :' + nama_pasien + ' ( ' + jenis_kelamin + ' - ' + umur_tahun + ' TH)' + '^FS',
+                              //           '^BY2,2,60',
+                              //           '^FO150,70^B3N,N,90,Y^FD' + no_sep + '^FS^',
+                              //           'XZ',
+                              //           '^XA',
+                              //           '^CF0,30,20',
+                              //           '^FO200,40^FWN^FD' + '   :' + nama_pasien + ' ( ' + jenis_kelamin + ' - ' + umur_tahun + ' TH)' + '^FS',
+                              //           '^BY4,2,60',
+                              //           '^FO220,70^B3N,N,90,Y^FD' + no_mr + '^FS^',
+                              //           'XZ'
+                              //       ];
+                              //       return qz.print(config, nomorsep);
+                              //   }).catch(function(e) {
+                              //       console.error(e);
+                              //       toastr["error"]("Printer Tidak Ditemukan");
+                              //   });
 
                               //RECEIPT
                               qz.printers.find("Receipt").then(function(printer) {
@@ -351,33 +366,33 @@
                                   var data = [
                                       '\x1B' + '\x40', // init
                                       '\x1B' + '\x61' + '\x31', // center align
-                                      '\x1B' + '\x4D' + '\x30', // normal text
-                                      'ANTRIAN POLI' + '\x0A',
-                                      'RS JIWA PROF HB SAANIN PADANG' + '\x0A',
+                                      '\x1B' + '\x21' + '\x30',
+                                      'Bukti Registrasi  \x0A',
                                       '\x1B' + '\x21' + '\x0A' + '\x1B' + '\x45' + '\x0A', // em mode off
-                                      '\x0A',
-                                      '\x0A',
-                                      '\x0A',
-                                      '\x1B' + '\x45' + '\x0D', // bold on
-                                      'ONLINE' + '\x0A',
-                                      '\x1B' + '\x45' + '\x0A', // bold off
-                                      'Nomor Antrian :' + '\x0A',
-                                      '\x0A',
-                                      '\x1B' + '\x21' + '\x30', //em mode off
-                                      '\x1B' + '\x45' + '\x0D', // bold on
-                                      '' + angka + '\x0A',
-                                      '\x1B' + '\x45' + '\x0A', // bold off
-                                      '\x1B' + '\x21' + '\x0A' + '\x1B' + '\x45' + '\x0A', // em mode off
-                                      '\x0A',
-                                      '' + time + '\x0A',
-                                      '' + '' + '\x0A',
-                                      '' + '*) Silakan menunggu antrean poli' + '\x0A',
-                                      '' + '' + '\x0A',
-                                      '\x0A' + '\x0A',
+                                      '\x1B' + '\x4D' + '\x30', //F normal text
+                                      'Pasien Rawat Jalan - ' + time + '\x0A', // text and line break
+                                      '\x0A', // line break
                                       '\x1B' + '\x61' + '\x30', // left align
+                                      '  No. RM         : ' + nomr + '\x0A',
+                                      '  Nama Pasien    : ' + namapasien + '\x0A',
+                                      '  Tanggal Lahir  : ' + tgllahir + '\x0A',
+                                      '  Umur           : ' + ut + '\x0A',
+                                      '  No. Registrasi : ' + noregistrasi + '\x0A',
+                                      '  Tujuan         : ' + namapoli + '\x0A',
+                                      '  Dokter/Psikolog : ' + namadokter + '\x0A',
+                                      '  Tanggal        : ' + time + '\x0A',
+                                      '\x0A',
+                                      '\x1B' + '\x61' + '\x32', // right align
+                                      '\x1B' + '\x21' + '\x30', // em mode on
+                                      'No. Antrian : ' + noantrean + '\x0A',
+                                      '\x1B' + '\x21' + '\x0A' + '\x1B' + '\x45' + '\x0A', // em mode off
+                                      '\x0A' + '\x0A',
+                                      '\x1B' + '\x61' + '\x31', // center align
+                                      '------- RS Jiwa Prof. HB Saanin Padang -------' + '\x0A',
+                                      '\x0A' + '\x0A',
                                       '\x0A' + '\x0A' + '\x0A' + '\x0A' + '\x0A' + '\x0A' + '\x0A',
-                                      '\x1B' + '\x69', // cut paper 
-                                      '\x10' + '\x14' + '\x01' + '\x00' + '\x05',
+                                      '\x1B' + '\x69', // cut paper (old syntax)
+                                      '\x10' + '\x14' + '\x01' + '\x00' + '\x05', // Generate Pulse to kick-out cash drawer**
                                   ];
                                   return qz.print(config, data);
                               }).catch(function(e) {
@@ -428,6 +443,17 @@
                                   var ut = data.metadata.ut
                                   var mr = data.metadata.nomr
                                   var jeniskelamin = data.metadata.jeniskelamin
+                                  var noantrean = data.metadata.noantrean;
+                                  var nosep = data.metadata.nosep;
+                                  var namapasien = data.metadata.namapasien;
+                                  var nama_pasien = data.metadata.namapasien;
+                                  var ut = data.metadata.ut;
+                                  var jeniskelamin = data.metadata.jeniskelamin;
+                                  var tgllahir = data.metadata.tgllahir;
+                                  var namadokter = data.metadata.dokter;
+                                  var nomr = data.metadata.nomr;
+                                  var noregistrasi = data.metadata.no_registrasi;
+                                  var namapoli = data.metadata.namapoli;
                                   Swal.fire({
                                       title: data.metadata.message,
                                       text: "Apakah anda ingin mencetak Label, SEP, dan Bukti Registrasi ?",
@@ -478,6 +504,7 @@
                                               // Create a default config for the found printer
                                               var config = qz.configs.create(printer);
 
+
                                               // Raw ZPL
                                               var angka = ceknoantrean;
                                               var no_sep = ceknosep;
@@ -487,33 +514,33 @@
                                               var data = [
                                                   '\x1B' + '\x40', // init
                                                   '\x1B' + '\x61' + '\x31', // center align
-                                                  '\x1B' + '\x4D' + '\x30', // normal text
-                                                  'ANTRIAN POLI' + '\x0A',
-                                                  'RS JIWA PROF HB SAANIN PADANG' + '\x0A',
+                                                  '\x1B' + '\x21' + '\x30',
+                                                  'Bukti Registrasi  \x0A',
                                                   '\x1B' + '\x21' + '\x0A' + '\x1B' + '\x45' + '\x0A', // em mode off
-                                                  '\x0A',
-                                                  '\x0A',
-                                                  '\x0A',
-                                                  '\x1B' + '\x45' + '\x0D', // bold on
-                                                  'ONLINE' + '\x0A',
-                                                  '\x1B' + '\x45' + '\x0A', // bold off
-                                                  'Nomor Antrian :' + '\x0A',
-                                                  '\x0A',
-                                                  '\x1B' + '\x21' + '\x30', //em mode off
-                                                  '\x1B' + '\x45' + '\x0D', // bold on
-                                                  '' + angka + '\x0A',
-                                                  '\x1B' + '\x45' + '\x0A', // bold off
-                                                  '\x1B' + '\x21' + '\x0A' + '\x1B' + '\x45' + '\x0A', // em mode off
-                                                  '\x0A',
-                                                  '' + time + '\x0A',
-                                                  '' + '' + '\x0A',
-                                                  '' + '*) Silakan menunggu antrean poli' + '\x0A',
-                                                  '' + cekdokter + '\x0A',
-                                                  '\x0A' + '\x0A',
+                                                  '\x1B' + '\x4D' + '\x30', //F normal text
+                                                  'Pasien Rawat Jalan - ' + time + '\x0A', // text and line break
+                                                  '\x0A', // line break
                                                   '\x1B' + '\x61' + '\x30', // left align
+                                                  '  No. RM         : ' + nomr + '\x0A',
+                                                  '  Nama Pasien    : ' + namapasien + '\x0A',
+                                                  '  Tanggal Lahir  : ' + tgllahir + '\x0A',
+                                                  '  Umur           : ' + ut + '\x0A',
+                                                  '  No. Registrasi : ' + noregistrasi + '\x0A',
+                                                  '  Tujuan         : ' + namapoli + '\x0A',
+                                                  '  Dokter/Psikolog : ' + namadokter + '\x0A',
+                                                  '  Tanggal        : ' + time + '\x0A',
+                                                  '\x0A',
+                                                  '\x1B' + '\x61' + '\x32', // right align
+                                                  '\x1B' + '\x21' + '\x30', // em mode on
+                                                  'No. Antrian : ' + noantrean + '\x0A',
+                                                  '\x1B' + '\x21' + '\x0A' + '\x1B' + '\x45' + '\x0A', // em mode off
+                                                  '\x0A' + '\x0A',
+                                                  '\x1B' + '\x61' + '\x31', // center align
+                                                  '------- RS Jiwa Prof. HB Saanin Padang -------' + '\x0A',
+                                                  '\x0A' + '\x0A',
                                                   '\x0A' + '\x0A' + '\x0A' + '\x0A' + '\x0A' + '\x0A' + '\x0A',
-                                                  '\x1B' + '\x69', // cut paper 
-                                                  '\x10' + '\x14' + '\x01' + '\x00' + '\x05',
+                                                  '\x1B' + '\x69', // cut paper (old syntax)
+                                                  '\x10' + '\x14' + '\x01' + '\x00' + '\x05', // Generate Pulse to kick-out cash drawer**
                                               ];
                                               return qz.print(config, data);
                                           }).catch(function(e) {
