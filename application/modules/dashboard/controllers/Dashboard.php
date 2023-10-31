@@ -342,6 +342,7 @@ class Dashboard extends MX_Controller
                             ], 201);
                         }
                     } else {
+
                         if ($resultarr['metaData']['code'] == 200) {
 
                             //NOREGIS
@@ -407,65 +408,6 @@ class Dashboard extends MX_Controller
                                 );
                                 $this->Antrian_model->create_task_antrian($data2);
                             }
-
-                            // //CHECKIN
-                            // $data_BpjsCheckin = getenv('BPJS_ANTREAN_CONSID');
-                            // $secretKey_BpjsCheckin = getenv('BPJS_ANTREAN_SIGNATURE');
-                            // $user_key_BpjsCheckin = getenv('BPJS_ANTREAN_USERKEY');
-
-                            // date_default_timezone_set('UTC');
-                            // $tStamp_BpjsCheckin = strval(time() - strtotime('1970-01-01 00:00:00'));
-
-                            // $signature_BpjsCheckin = hash_hmac('sha256', $data_BpjsCheckin . "&" . $tStamp_BpjsCheckin, $secretKey_BpjsCheckin, true);
-                            // $encodedSignature_BpjsCheckin = base64_encode($signature_BpjsCheckin);
-
-                            // $headers_BpjsCheckin = [
-                            //     'X-cons-id: ' . $data_BpjsCheckin . '',
-                            //     'X-timestamp: ' . $tStamp_BpjsCheckin . '',
-                            //     'X-signature: ' . $encodedSignature_BpjsCheckin . '',
-                            //     'User-key: ' . $user_key_BpjsCheckin . '',
-                            //     // 'Content-Type: Application/x-www-form-urlencoded',
-                            // ];
-
-                            // // $kodetgl = preg_replace("/-/", "", date('Y-m-d'));
-                            // $kodebooking_BpjsCheckin = $databooking['kodebooking'];
-                            // // $kodepoli = $_POST['kode_poli'];
-                            // // $noantrean = $_POST['angka_antrian'];
-                            // $yourdate_BpjsCheckin = date("Y-m-d H:i:s");
-                            // $stamp_BpjsCheckin = strtotime($yourdate_BpjsCheckin);
-                            // $estimasidilayani_BpjsCheckin = $stamp_BpjsCheckin * 1000;
-
-                            // $dataarray_BpjsCheckin = [
-                            //     "kodebooking" => $kodebooking_BpjsCheckin,
-                            //     "taskid" => 4,
-                            //     "waktu" => $estimasidilayani_BpjsCheckin
-                            // ];
-
-
-
-                            // $postdata_BpjsCheckin = json_encode($dataarray_BpjsCheckin); //ubah data array ke JSON
-
-                            // $ch_BpjsCheckin = curl_init();
-                            // curl_setopt(
-                            //     $ch_BpjsCheckin,
-                            //     CURLOPT_URL,
-                            //     getenv('BPJS_ANTREAN_URL') . "antrean/updatewaktu"
-                            // );
-                            // curl_setopt($ch_BpjsCheckin, CURLOPT_POST, 1);
-                            // curl_setopt($ch_BpjsCheckin, CURLOPT_POSTFIELDS, $postdata_BpjsCheckin);
-                            // curl_setopt($ch_BpjsCheckin, CURLOPT_RETURNTRANSFER, 1);
-                            // curl_setopt($ch_BpjsCheckin, CURLOPT_HTTPHEADER, $headers_BpjsCheckin);
-                            // $content = curl_exec($ch_BpjsCheckin);
-                            // curl_close($ch_BpjsCheckin);
-
-                            // $resultarr_BpjsCheckin = json_decode($content, true);
-                            // // $key_BpjsCheckin = '' . $data_BpjsCheckin . '' . $secretKey_BpjsCheckin . '' . $tStamp_BpjsCheckin . '';
-                            // // if ($_BpjsCheckin['metaData']['code'] == 200) {
-                            // // $response = $this->stringDecrypt($key, $resultarr['response']);
-                            // echo json_encode($resultarr_BpjsCheckin);
-                            // //END CHECKIN
-
-
 
                             if ($tujuanKunj == '1') {
                                 $tk = 'Kunjungan Pertama';
