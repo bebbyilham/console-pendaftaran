@@ -285,13 +285,14 @@
                   var kodebooking = $('#kodebookingjkn').val();
                   $('#btn_cek_kodebooking').attr('disabled', true);
                   if (kodebooking == '') {
-                      $('#btn_cek_kodebooking').attr('disabled', false);
-                  } else {
                       Swal.fire({
                           icon: 'error',
                           title: 'Masukan No. MR/No. Kartu BPJS/Kodebooking',
                           text: 'Peringatan',
                       });
+                      $('#btn_cek_kodebooking').attr('disabled', false);
+                  } else {
+
                       $.ajax({
                           url: '<?php echo base_url(); ?>dashboard/cekDataKodebooking',
                           method: 'POST',

@@ -384,11 +384,8 @@ class Dashboard extends MX_Controller
 
 
                             $kodebooking = $databooking['kodebooking'];
-                            // $yourdate = date("Y-m-d H:i:s");
-                            // $stamp = strtotime($yourdate);
-                            // $estimasidilayani = $stamp * 1000;
+
                             $dataantrian = array(
-                                // 'norm'              => $norm,
                                 'checkin'           => 2,
                             );
                             $this->Antrian_model->ubah_antrian_checkin($kodebooking, $dataantrian);
