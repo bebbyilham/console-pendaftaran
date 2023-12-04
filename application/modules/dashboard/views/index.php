@@ -196,7 +196,7 @@
                           </div>
                       </div>
                       <div class="modal fade" id="modal-kodebooking-jkn" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="modal-kodebooking-jkn" aria-hidden="true">
-                          <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
+                          <div class="modal-dialog modal- modal-dialog-centered" role="document">
                               <div class="modal-content bg-gradient-success">
                                   <div class="modal-header">
                                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -205,20 +205,29 @@
                                   </div>
                                   <div class="modal-body p-0">
                                       <div class="card bg-gradient-success border-0 mb-0">
-
                                           <div class="card-body px-lg-5 py-lg-5">
-                                              <!-- <div class="text-center text-muted mb-4">
-                                                  <small>Or sign in with credentials</small>
-                                              </div> -->
                                               <form role="form">
+                                                  <!-- <div class="row">
+                                                      <div class="col-8"> -->
                                                   <div class="form-group">
                                                       <div class="input-group input-group-merge input-group-alternative">
                                                           <div class="input-group-prepend">
                                                               <span class="input-group-text"><i class="ni ni-collection"></i></span>
                                                           </div>
                                                           <input id="kodebookingjkn" class="form-control" placeholder="Kode Booking / No. MR / No. BPJS ">
+                                                          <div class="input-group-prepend">
+                                                              <span class="input-group-text hapus_text"><i class="fas fa-backspace text-danger"></i></span>
+                                                          </div>
                                                       </div>
                                                   </div>
+                                                  <!-- </div>
+                                                      <div class="col-4">
+                                                          <div class="form-group">
+                                                              <button type="button" id="btn_cek_kodebooking" class="btn btn-primary my-2">PROSES</button>
+                                                          </div>
+                                                      </div> -->
+
+
                                                   <!-- <div class="form-group">
                                                       <div class="input-group input-group-merge input-group-alternative">
                                                           <div class="input-group-prepend">
@@ -228,7 +237,7 @@
                                                       </div>
                                                   </div> -->
                                                   <div class="text-center">
-                                                      <button type="button" id="btn_cek_kodebooking" class="btn btn-primary my-2">PROSES</button>
+                                                      <button type="button" id="btn_cek_kodebooking" class="btn btn-primary btn-block my-2">PROSES</button>
                                                   </div>
                                               </form>
                                           </div>
@@ -280,6 +289,15 @@
               $('#daftar-jkn').on('click', function() {
                   $('#kodebookingjkn').val('');
               });
+
+              $('.hapus_text').on('click', function() {
+                  $('#kodebookingjkn').val('');
+                  $('#kodebookingjkn').focus();
+              })
+
+              $('#modal-kodebooking-jkn').on('shown.bs.modal', function() {
+                  $('#kodebookingjkn').focus();
+              })
 
               $('#btn_cek_kodebooking').on('click', function() {
                   var kodebooking = $('#kodebookingjkn').val();
