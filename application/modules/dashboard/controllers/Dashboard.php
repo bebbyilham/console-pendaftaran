@@ -30,6 +30,7 @@ class Dashboard extends MX_Controller
         $data['sisa_antrian_poli'] = $this->Antrian_model->sisa_antrian_poli();
         $data['sisa_antrian_farmasi'] = $this->Antrian_model->sisa_antrian_farmasi();
         $data['sisa_antrian_batal'] = $this->Antrian_model->sisa_antrian_batal();
+        $data['sejiwa_url'] = getenv('SEJIWA_URL');
 
         $data['content'] = '';
         $page = 'dashboard/index';
@@ -770,28 +771,14 @@ class Dashboard extends MX_Controller
                                     'ref_antrean' =>  $databooking['kodebooking'],
                                 );
 
-                                // $kodetgl = preg_replace("/-/", "", date('Y-m-d'));
-                                // $kodepoli = $_POST['kode_poli'];
-                                // $last_row = $this->db->select('*')->where('tanggalperiksa', date('Y-m-d'))->like('nomorantrean', $kodepoli . '-', 'after')->order_by('nomorantrean', "desc")->get('simrsj_webservice.antrean', 1)->result();
 
-
-                                // foreach ($last_row as $row) {
-                                //     $output = sprintf("%03d", $row->angkaantrean + 1);
-                                // }
-                                // if (!$last_row) {
-                                //     $output = sprintf("%03d", +1);
-                                // }
-
-                                // $new_record = $output;
-                                // $noantrean = $new_record;
-                                // $norm = $_POST['no_mr'];
                                 $kodebooking = $databooking['kodebooking'];
-                                // $yourdate = date("Y-m-d H:i:s");
-                                // $stamp = strtotime($yourdate);
-                                // $estimasidilayani = $stamp * 1000;
+
+                                //ANTRIAN
                                 $dataantrian = array(
                                     // 'norm'              => $norm,
                                     'checkin'           => 2,
+                                    'statusantrean'           => 3,
                                 );
                                 $this->Antrian_model->ubah_antrian_checkin($kodebooking, $dataantrian);
 
@@ -1177,5 +1164,604 @@ class Dashboard extends MX_Controller
         } else {
             echo json_encode($resultarr['metaData']['message']);
         }
+    }
+
+    public function cek_pasien()
+    {
+        $kodebooking = $_POST['kodebooking'];
+        $databooking = $this->db->select('*')
+            ->where('tanggalperiksa',  date("Y-m-d"))
+            ->order_by('tanggalperiksa', "desc")->limit(1)
+            ->like('kodebooking', $kodebooking)
+            ->or_like('norm',  preg_replace("/-/", "", $kodebooking))
+            ->or_like('nomorkartu',  preg_replace("/-/", "", $kodebooking))
+
+            ->get('simrsj_webservice.antrean')->row_array();
+        if ($databooking) {
+            $tanggalperiksa = $databooking['tanggalperiksa'];
+            if ($tanggalperiksa == date("Y-m-d")) {
+                echo json_encode([
+                    'metadata' => [
+                        'result' => $databooking,
+                        'message' => 'Data diproses',
+                        'code' => 200
+                    ],
+                ], 200);
+            } else {
+                echo json_encode([
+                    'metadata' => [
+                        'message' => 'Tanggal antrean tidak sesuai.',
+                        'code' => 201
+                    ],
+                ], 201);
+            }
+        } else {
+            echo json_encode([
+                'metadata' => [
+                    'message' => 'Data tidak terdaftar',
+                    'code' => 201
+                ],
+            ], 201);
+        }
+    }
+
+    public function cek_kunjungan()
+    {
+        $kodebooking = $_POST['kodebooking'];
+        $cekkunjungan = $this->db->get_where('simrsj_aplikasi.pasien_kunjungan', ['ref_antrean' => $kodebooking])->row_array();
+
+        if ($cekkunjungan) {
+            $cekantrean = $this->db->get_where('simrsj_webservice.antrean', ['kodebooking' => $kodebooking])->row_array();
+            $ceksep = $this->db->get_where('simrsj_aplikasi.bpjs_sep', ['no_registrasi' => $cekkunjungan['no_registrasi']])->row_array();
+            echo json_encode([
+                'metadata' => [
+                    'result' => [
+                        'datakunjungan' => $cekkunjungan,
+                        'dataanrean' => $cekantrean,
+                        'datasep' => $ceksep,
+                    ],
+                    'message' => 'Data kunjungan sudah ada',
+                    'code' => 201
+                ],
+            ], 201);
+        } else {
+            echo json_encode([
+                'metadata' => [
+                    'message' => 'Data kunjungan belum ada',
+                    'code' => 200
+                ],
+            ], 200);
+        }
+    }
+
+    public function insert_sep_db()
+    {
+        $dataSep = array(
+            'no_registrasi' => $_POST['noregistrasi'],
+            'noSep'         => $_POST['nosep'],
+            'tglSep'        => $_POST['tglSep'],
+            'jnsPelayanan'  => $_POST['jnsPelayanan'],
+            'kelasRawat'    => $_POST['kelasRawat'],
+            'kodeDiagnosa'  => $_POST['kodeDiagnosa'],
+            'diagnosa'      => $_POST['diagnosa'],
+            'noRujukan'     => $_POST['noRujukan'],
+            'poli'          => $_POST['poli'],
+            'poliEksekutif' => $_POST['poliEksekutif'],
+            'catatan'       => $_POST['catatan'],
+            'penjamin'      => $_POST['penjamin'],
+            'noKartu'       => $_POST['noKartu'],
+            'nama'          => $_POST['nama'],
+            'tglLahir'      => $_POST['tglLahir'],
+            'noMr'          => $_POST['noMr'],
+            'kelamin'       => $_POST['kelamin'],
+            'jnsPeserta'    => $_POST['jnsPeserta'],
+            'hakKelas'      => $_POST['hakKelas'],
+            'asuransi'      => $_POST['asuransi'],
+            'dinsos'        =>
+            $_POST['dinsos'],
+            'prolanisPRB'   =>
+            $_POST['prolanisPRB'],
+            'noSKTM'        =>
+            $_POST['noSKTM'],
+            'dokter'        => $_POST['namaDokter'],
+            'faskesPerujuk' => $_POST['namaPpk'],
+            'noTelepon'     => $_POST['nomorTelp'],
+            'kelasRawatNaik' =>  $_POST['kelasRawatNaik'],
+            'pembiayaan'    =>  $_POST['pembiayaan'],
+            'tujuanKunj'    => $_POST['tujuanKunj'],
+            'flagProcedure' => $_POST['flagProcedure'],
+            'kodePenunjang' => $_POST['kodePenunjang'],
+            'assesmentPel'  => $_POST['assestmenPel'],
+        );
+        $this->Rajal_model->simpan_hasil_sep($dataSep);
+    }
+
+    public function cek_surkon()
+    {
+        $data = getenv('BPJS_VCLAIM_CONSID');
+        $secretKey = getenv('BPJS_VCLAIM_SIGNATURE');
+        $user_key = getenv('BPJS_VCLAIM_USERKEY');
+
+        date_default_timezone_set('UTC');
+        $tStamp = strval(time() - strtotime('1970-01-01 00:00:00'));
+
+        $signature = hash_hmac('sha256', $data . "&" . $tStamp, $secretKey, true);
+        $encodedSignature = base64_encode($signature);
+
+        $ch = curl_init();
+        $headers = [
+            'X-cons-id: ' . $data . '',
+            'X-timestamp: ' . $tStamp . '',
+            'X-signature: ' . $encodedSignature . '',
+            'User-key: ' . $user_key . '',
+            'Content-Type: application/json; charset=utf-8',
+        ];
+
+        curl_setopt($ch, CURLOPT_URL, getenv('BPJS_VCLAIM_URL') . "RencanaKontrol/noSuratKontrol/" . $_POST['no_surkon']);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 3);
+        curl_setopt($ch, CURLOPT_HTTPGET, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        $content = curl_exec($ch);
+        // $err = curl_error($ch);
+        curl_close($ch);
+
+        $resultarr = json_decode($content, true);
+        $key = '' . $data . '' . $secretKey . '' . $tStamp . '';
+        if ($resultarr) {
+            if ($resultarr['metaData']['code'] == 200) {
+                $response = $this->stringDecrypt($key, $resultarr['response']);
+                // echo json_encode($resultarr);
+                echo $response;
+            } else {
+                echo json_encode($resultarr);
+            }
+        } else {
+            echo json_encode([
+                'metaData' => [
+                    'message' => 'Coba lagi',
+                    'code' => 201
+                ],
+            ], 201);
+        }
+    }
+
+    public function encrypt_surkon()
+    {
+        $data = getenv('BPJS_VCLAIM_CONSID');
+        $secretKey = getenv('BPJS_VCLAIM_SIGNATURE');
+
+        date_default_timezone_set('UTC');
+        $tStamp = strval(time() - strtotime('1970-01-01 00:00:00'));
+
+
+        $key = '' . $data . '' . $secretKey . '' . $tStamp . '';
+
+
+        $response = $this->stringDecrypt($key, $_POST['result_surkon']);
+        // var_dump($response);
+        echo $response;
+    }
+
+    public function insertSEP()
+    {
+        $data = getenv('BPJS_VCLAIM_CONSID');
+        $secretKey = getenv('BPJS_VCLAIM_SIGNATURE');
+        $user_key = getenv('BPJS_VCLAIM_USERKEY');
+
+        date_default_timezone_set('UTC');
+        $tStamp = strval(time() - strtotime('1970-01-01 00:00:00'));
+
+        $signature = hash_hmac('sha256', $data . "&" . $tStamp, $secretKey, true);
+        $encodedSignature = base64_encode($signature);
+
+        $headers = [
+            'X-cons-id: ' . $data . '',
+            'X-timestamp: ' . $tStamp . '',
+            'X-signature: ' . $encodedSignature . '',
+            'User-key: ' . $user_key . '',
+            'Content-Type: Application/x-www-form-urlencoded',
+        ];
+
+        // Parameter POST SEP
+        $asalRujukan = $_POST['asalRujukan'];
+        $tglRujukan = $_POST['tglRujukan'];
+        $noRujukan = $_POST['noRujukan'];
+        $ppkRujukan = $_POST['kdProviderPerujuk'];
+        $poliTujuan = $_POST['poliTujuan'];
+        // $noSuratKontrol = $_POST['noSuratKontrol'];
+        $kodeDokter = $_POST['kodeDokter'];
+
+        $klsRawat = [
+            'klsRawatHak' => "",
+            'klsRawatNaik' => "",
+            'pembiayaan' => "",
+            'penanggungJawab' => "",
+        ];
+
+        $rujukan = [
+            'asalRujukan' => $asalRujukan,
+            'tglRujukan' => $tglRujukan,
+            'noRujukan' => $noRujukan,
+            'ppkRujukan' => $ppkRujukan,
+        ];
+        $poli = [
+            'tujuan' => $poliTujuan,
+            'eksekutif' => "0",
+        ];
+        $cob = [
+            'cob' => "0",
+        ];
+        $katarak = [
+            'katarak' => "0",
+        ];
+        $lakaLantas = "0";
+        $noLP = "";
+        $tglKejadian = "";
+        $keterangan = "";
+        $suplesi = "";
+        $noSepSuplesi = "";
+        $kdPropinsi = "";
+        $kdKabupaten = "";
+        $kdKecamatan = "";
+        $jaminan = [
+            'lakaLantas' => $lakaLantas,
+            'noLP' => $noLP,
+            'penjamin' => [
+                'tglKejadian' => $tglKejadian,
+                'keterangan' => $keterangan,
+                'suplesi' => [
+                    'suplesi' => $suplesi,
+                    'noSepSuplesi' => $noSepSuplesi,
+                    'lokasiLaka' => [
+                        'kdPropinsi' => $kdPropinsi,
+                        'kdKabupaten' => $kdKabupaten,
+                        'kdKecamatan' => $kdKecamatan,
+                    ]
+                ]
+            ]
+        ];
+
+        $jeniskunjungan = $_POST['jeniskunjungan'];
+
+        if ($jeniskunjungan == '1') {
+            $noSurat = "";
+            $tujuanKunj = "0";
+            $flagProcedure = "";
+            $kdPenunjang = "";
+            $assesmentPel = "";
+            $catatan = "Kunjungan Pertama";
+        } elseif ($jeniskunjungan == '3') {
+            $noSurat = $_POST['noSuratKontrol'];
+            $tujuanKunj = "2";
+            $flagProcedure = "";
+            $kdPenunjang = "";
+            $assesmentPel = "5";
+            $catatan = "Kontrol";
+        }
+
+        $skdp = [
+            'noSurat' => $noSurat,
+            'kodeDPJP' => $kodeDokter,
+        ];
+
+        $noKartu = $_POST['noKartu'];
+        $tglSep = date('Y-m-d');
+        $noMR = $_POST['noMR'];
+        $diagAwal = $_POST['diagAwal'];
+        $dpjpLayan = $kodeDokter;
+        $noTelp = $_POST['noTelp'];
+
+        $dataarray['request']['t_sep'] = [
+            'noKartu'       => $noKartu,
+            'tglSep'        => $tglSep,
+            'ppkPelayanan'  => '0301R002',
+            'jnsPelayanan'  => '2',
+            'klsRawat'      => $klsRawat,
+            'noMR'          => $noMR,
+            'rujukan'       => $rujukan,
+            'catatan'       => $catatan,
+            'diagAwal'      => $diagAwal,
+            'poli'          => $poli,
+            'cob'           => $cob,
+            'katarak'       => $katarak,
+            'jaminan'       => $jaminan,
+            'tujuanKunj'    => $tujuanKunj,
+            'flagProcedure' => $flagProcedure,
+            'kdPenunjang'   => $kdPenunjang,
+            'assesmentPel'  => $assesmentPel,
+            'skdp'          => $skdp,
+            'dpjpLayan'     => $dpjpLayan,
+            'noTelp'        => $noTelp,
+            'user'          => $_POST['user'],
+        ];
+        $postdata = json_encode($dataarray); //ubah data array ke JSON
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, getenv('BPJS_VCLAIM_URL') . "/SEP/2.0/insert");
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        $content = curl_exec($ch);
+        curl_close($ch);
+
+        $key = '' . $data . '' . $secretKey . '' . $tStamp . '';
+        $resultarr = json_decode($content, true);
+        // $response = $this->stringDecrypt($key, $resultarr['response']);
+        // if ($resultarr['metaData']['code'] == 200) {
+        //     echo $response;
+        // } else {
+        //     echo json_encode($resultarr['metaData']);
+        // }
+
+        if ($resultarr) {
+            if ($resultarr['metaData']['code'] == 200) {
+                $response = $this->stringDecrypt($key, $resultarr['response']);
+                // echo json_encode($resultarr);
+                echo $response;
+            } else {
+                echo json_encode($resultarr);
+            }
+        } else {
+            echo json_encode([
+                'metaData' => [
+                    'message' => 'Coba lagi',
+                    'code' => 201
+                ],
+            ], 201);
+        }
+    }
+
+    public function cariBnorujukan()
+    {
+        $data = getenv('BPJS_VCLAIM_CONSID');
+        $secretKey = getenv('BPJS_VCLAIM_SIGNATURE');
+        $user_key = getenv('BPJS_VCLAIM_USERKEY');
+
+        date_default_timezone_set('UTC');
+        $tStamp = strval(time() - strtotime('1970-01-01 00:00:00'));
+
+        $signature = hash_hmac('sha256', $data . "&" . $tStamp, $secretKey, true);
+        $encodedSignature = base64_encode($signature);
+
+        $ch = curl_init();
+        $headers = [
+            'X-cons-id: ' . $data . '',
+            'X-timestamp: ' . $tStamp . '',
+            'X-signature: ' . $encodedSignature . '',
+            'User-key: ' . $user_key . '',
+            'Content-Type: application/json; charset=utf-8',
+        ];
+        if ($_POST['asalRujukan'] == 1) {
+            $url = getenv('BPJS_VCLAIM_URL') . "Rujukan/" . $_POST['noRujukan'];
+        } else {
+            $url = getenv('BPJS_VCLAIM_URL') . "Rujukan/RS/" . $_POST['noRujukan'];
+        }
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 3);
+        curl_setopt($ch, CURLOPT_HTTPGET, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        $content = curl_exec($ch);
+        // $err = curl_error($ch);
+        curl_close($ch);
+
+        $resultarr = json_decode($content, true);
+        $key = '' . $data . '' . $secretKey . '' . $tStamp . '';
+        if ($resultarr) {
+            if ($resultarr['metaData']['code'] == 200) {
+                $response = $this->stringDecrypt($key, $resultarr['response']);
+                // echo json_encode($resultarr);
+                echo $response;
+            } else {
+                echo json_encode($resultarr);
+            }
+        } else {
+            echo json_encode([
+                'metaData' => [
+                    'message' => 'Coba lagi',
+                    'code' => 201
+                ],
+            ], 201);
+        }
+    }
+
+    public function cek_jadwaldokter()
+    {
+        $dokterkode = $_POST['kodeDokter'];
+        $kodepoli = $_POST['poliTujuan'];
+        $tglkontrol = $_POST['tglRencanaKontrol'];
+        $datajadwal = $this->db->select('*')
+            ->where('jadwal_dokter.hari', date('N', strtotime($tglkontrol)))
+            ->where('dokter_kode', $dokterkode)
+            ->where('jadwal_dokter.poli_kdsubspesialis', $kodepoli)
+            ->where('jadwal_dokter.statusjadwal', 1)
+            ->limit(1)
+
+            ->get('simrsj_webservice.jadwal_dokter')->row_array();
+        if ($datajadwal) {
+            echo json_encode([
+                'metadata' => [
+                    'result' => $datajadwal,
+                    'message' => 'Jadwal sesuai',
+                    'code' => 200
+                ],
+            ], 200);
+        } else {
+            echo json_encode([
+                'metadata' => [
+                    'message' => 'Jadwal dokter tidak sesuai',
+                    'code' => 201
+                ],
+            ], 201);
+        }
+    }
+
+    public function pendaftaran_pasien()
+    {
+        $kodepoli = $_POST['kodepoli'];
+        $norm = $_POST['norm'];
+        $kodedokter = $_POST['kodedokter'];
+        $tanggalperiksa = $_POST['tanggalperiksa'];
+        $kodebooking = $_POST['kodebooking'];
+
+        $no_sep = $_POST['nosep'];
+        $nomorkartu = $_POST['nomorkartu'];
+
+        $datapasien = $this->db->get_where('simrsj_master.pasien', ['no_mr' => $norm])->row_array();
+        $datapoli = $this->db->get_where('simrsj_master.ruangan', ['kode_ruangan' => $kodepoli])->row_array();
+        $datadokter = $this->db->get_where('simrsj_master.pegawai', ['kode_dpjp' => $kodedokter])->row_array();
+        $cekkunjungan = $this->db->get_where('simrsj_aplikasi.pasien_kunjungan', ['id_pasien' => $datapasien['id_pasien'], 'tanggal_registrasi' => $tanggalperiksa])->row_array();
+        $databooking = $this->db->get_where('simrsj_webservice.antrean', ['kodebooking' => $kodebooking])->row_array();
+
+        if ($datapasien['tanggal_lahir'] == '0') {
+            $jeniskelamin = 'Perempuan';
+        } else {
+            $jeniskelamin = 'Laki-laki';
+        }
+        $birthDate = new DateTime($datapasien['tanggal_lahir']);
+        $today = new DateTime("today");
+        if ($birthDate > $today) {
+            exit("0 tahun 0 bulan 0 hari");
+        }
+        $ut = $today->diff($birthDate)->y;
+        $ub = $today->diff($birthDate)->m;
+        $uh = $today->diff($birthDate)->d;
+        $tgl_regis = $tanggalperiksa;
+
+
+        $last_row = $this->db->select('id_kunjungan')->order_by('id_kunjungan', "desc")->get_where('pasien_kunjungan', ['tanggal_registrasi' => $tgl_regis, 'jenis_layanan' => 2])->num_rows();
+
+
+
+        $new_record = sprintf("%03d", $last_row + 1);
+
+        $no_registrasi = "RJBPJS" . date('dmy') . "K" . $new_record;
+
+        //KUNJUNGAN
+        $datakunjungan = array(
+            'new_record' => $new_record,
+            'tanggal_registrasi' => $tgl_regis,
+            'no_registrasi' => $no_registrasi,
+            'id_pasien' => $datapasien['id_pasien'],
+            'jenis_layanan' => 2,
+            'id_poli' => $datapoli['id_ruangan'],
+            'id_dokter' => $datadokter['id_pegawai'],
+            'shift' => 0,
+            'penjamin_pasien' => 1,
+            'petugas' => '0',
+            'status_kunjungan' => 1,
+            'ut' => $ut,
+            'ub' => $ub,
+            'uh' => $uh,
+            'ref_antrean' =>   $kodebooking,
+        );
+
+
+        //ANTRIAN
+        $dataantrian = array(
+            // 'norm'              => $norm,
+            'checkin'           => 2,
+            'statusantrean'           => 3,
+        );
+        $this->Antrian_model->ubah_antrian_checkin($kodebooking, $dataantrian);
+
+        $cektask = $this->db->get_where('simrsj_webservice.task_antrean', ['kode_booking' => $kodebooking])->result();
+        if ($cektask) {
+            $data1 = array(
+                'task_3' => date("Y-m-d H:i:s")
+            );
+            $this->Antrian_model->update_task_antrian($kodebooking, $data1);
+        } else {
+            $data2 = array(
+                'kode_booking' => $kodebooking,
+                'task_3' => date("Y-m-d H:i:s"),
+                'tgl_kunjungan' => date('Y-m-d')
+            );
+            $this->Antrian_model->create_task_antrian($data2);
+        }
+
+        $this->Rajal_model->tambah_kunjungan($datakunjungan);
+        echo json_encode([
+            'metadata' => [
+                'code' => '200',
+                'message' => 'Pendaftaran berhasil',
+                'result' => [
+                    'sep' =>  $no_sep,
+                    'noregistrasi' => $no_registrasi,
+                    // 'dbsep' => $dataSep,
+                    'kodebooking' => $kodebooking,
+                    'nomorkartu' => $nomorkartu,
+                    'nomr' => $norm,
+                    'noantrean' => $databooking['nomorantrean'],
+                    'namapasien' => $databooking['namapasien'],
+                    'tgllahir' => date('d-m-Y', strtotime($datapasien['tanggal_lahir'])),
+                    'namapoli' => $datapoli['nama_ruangan'],
+                    'jeniskelamin' => $jeniskelamin,
+                    'ut' => $ut,
+                    'ub' => $ub,
+                    'uh' => $uh,
+                    'dokter' => $datadokter['gelar_depan'] . $datadokter['nama_pegawai'] . $datadokter['gelar_belakang'],
+                ]
+            ],
+        ], 200);
+
+        // echo json_encode([
+        //     'metadata' => [
+        //         'result' => $datakunjungan,
+        //         'message' => 'Jadwal sesuai',
+        //         'code' => 200
+        //     ],
+        // ], 200);
+
+        // if ($datakunjungan) {
+        //     echo json_encode([
+        //         'metadata' => [
+        //             'result' => $datakunjungan,
+        //             'message' => 'Jadwal sesuai',
+        //             'code' => 200
+        //         ],
+        //     ], 200);
+        // } else {
+        //     echo json_encode([
+        //         'metadata' => [
+        //             'message' => 'Jadwal dokter tidak sesuai',
+        //             'code' => 201
+        //         ],
+        //     ], 201);
+        // }
+    }
+    public function poli()
+    {
+        $data =
+            $this->db->select('
+                            *
+                        ')
+            ->get_where('simrsj_master.ruangan', ['kode_ruangan' => 'JIW'])->result_array();
+
+        echo json_encode($data);
+    }
+
+    public function jadwal_poli()
+    {
+        $koderuangan = $_POST['koderuangan'];
+        $idruangan = $_POST['idruangan'];
+        if ($idruangan == '2') {
+            $jenisjadwal = '2';
+        } else {
+            $jenisjadwal = '1';
+        }
+
+        $data =
+            $this->db->select('
+                            *
+                        ')
+            ->join('simrsj_master.pegawai', 'pegawai.kode_dpjp = simrsj_webservice.jadwal_dokter.dokter_kode')
+            ->get_where('simrsj_webservice.jadwal_dokter', ['poli_kdsubspesialis' => $koderuangan, 'hari' => date("N"), 'jenisjadwal' => $jenisjadwal, 'statusjadwal' => '1'])->result_array();
+
+        echo json_encode($data);
     }
 }
