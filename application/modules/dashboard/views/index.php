@@ -1488,11 +1488,10 @@
               });
 
               $(document).on('click', '.pilih_ruangan', function() {
-                  //   alert('TEST')
+
                   var idruangan = $(this).attr('idruangan');
                   var koderuangan = $(this).attr('koderuangan');
                   $('#idruangan').val(idruangan);
-                  //   console.log('pilih_ruangan', idruangan);
                   $('.datajadwaldokter').html('');
                   $.ajax({
                       url: '<?php echo base_url(); ?>dashboard/jadwal_poli',

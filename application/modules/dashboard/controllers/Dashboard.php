@@ -2694,7 +2694,6 @@ class Dashboard extends MX_Controller
         // } else {
         //     $response = '-';
         // }
-
         // $data['rujukan'] = $response;
         $data['content'] = '';
         $page = 'dashboard/cetak_registrasi_bpjs';
