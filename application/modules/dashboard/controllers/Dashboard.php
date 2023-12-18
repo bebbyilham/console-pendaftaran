@@ -2587,115 +2587,115 @@ class Dashboard extends MX_Controller
             ')
             ->get_where('simrsj_webservice.antrean', ['kodebooking' => $data['data_kunjungan']['ref_antrean']])->row_array();
 
-        //rujukan
+        // //rujukan
 
-        $f1_data = getenv('BPJS_VCLAIM_CONSID');
-        $f1_secretKey = getenv('BPJS_VCLAIM_SIGNATURE');
-        $f1_user_key = getenv('BPJS_VCLAIM_USERKEY');
+        // $f1_data = getenv('BPJS_VCLAIM_CONSID');
+        // $f1_secretKey = getenv('BPJS_VCLAIM_SIGNATURE');
+        // $f1_user_key = getenv('BPJS_VCLAIM_USERKEY');
 
-        date_default_timezone_set('UTC');
-        $f1_tStamp = strval(time() - strtotime('1970-01-01 00:00:00'));
+        // date_default_timezone_set('UTC');
+        // $f1_tStamp = strval(time() - strtotime('1970-01-01 00:00:00'));
 
-        $f1_signature = hash_hmac('sha256', $f1_data . "&" . $f1_tStamp, $f1_secretKey, true);
-        $f1_encodedSignature = base64_encode($f1_signature);
+        // $f1_signature = hash_hmac('sha256', $f1_data . "&" . $f1_tStamp, $f1_secretKey, true);
+        // $f1_encodedSignature = base64_encode($f1_signature);
 
-        $f1_ch = curl_init();
-        $f1_headers = [
-            'X-cons-id: ' . $f1_data . '',
-            'X-timestamp: ' . $f1_tStamp . '',
-            'X-signature: ' . $f1_encodedSignature . '',
-            'User-key: ' . $f1_user_key . '',
-            'Content-Type: application/json; charset=utf-8',
-        ];
-        $f1_url = getenv('BPJS_VCLAIM_URL') . "Rujukan/" .  $data['data_sep']['noRujukan'];
-
-
-        curl_setopt($f1_ch, CURLOPT_URL, $f1_url);
-        curl_setopt($f1_ch, CURLOPT_HTTPHEADER, $f1_headers);
-        curl_setopt($f1_ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($f1_ch, CURLOPT_TIMEOUT, 3);
-        curl_setopt($f1_ch, CURLOPT_HTTPGET, 1);
-        curl_setopt($f1_ch, CURLOPT_SSL_VERIFYPEER, false);
-        $f1_content = curl_exec($f1_ch);
-        // $f1_err = curl_error($f1_ch);
-        curl_close($f1_ch);
-
-        $f1_resultarr = json_decode($f1_content, true);
-        $f1_key = '' . $f1_data . '' . $f1_secretKey . '' . $f1_tStamp . '';
+        // $f1_ch = curl_init();
+        // $f1_headers = [
+        //     'X-cons-id: ' . $f1_data . '',
+        //     'X-timestamp: ' . $f1_tStamp . '',
+        //     'X-signature: ' . $f1_encodedSignature . '',
+        //     'User-key: ' . $f1_user_key . '',
+        //     'Content-Type: application/json; charset=utf-8',
+        // ];
+        // $f1_url = getenv('BPJS_VCLAIM_URL') . "Rujukan/" .  $data['data_sep']['noRujukan'];
 
 
-        if ($f1_resultarr) {
-            if ($f1_resultarr['metaData']['code'] == 200) {
-                $f1_encrypt_method = 'AES-256-CBC';
-                $f1_key_hash = hex2bin(hash('sha256', $f1_key));
-                $f1_iv = substr(hex2bin(hash('sha256', $f1_key)), 0, 16);
-                $f1_output = openssl_decrypt(base64_decode($resultarr5['response']), $f1_encrypt_method, $f1_key_hash, OPENSSL_RAW_DATA, $f1_iv);
-                $f1_output5  = \LZCompressor\LZString::decompressFromEncodedURIComponent($f1_output);
-                $f1_response = json_decode($f1_output5, true);
-                $response_f1 = $f1_response;
-                $data['$response_f1'] = $response_f1;
-                $response = $data['$response_f1']['tglKunjungan'];
-                // $response = $this->stringDecrypt($f1_key, $f1_resultarr['response']);
-                // echo json_encode($f1_resultarr);
-                // echo $response;
-            } else {
-                $f2_data = getenv('BPJS_VCLAIM_CONSID');
-                $f2_secretKey = getenv('BPJS_VCLAIM_SIGNATURE');
-                $f2_user_key = getenv('BPJS_VCLAIM_USERKEY');
+        // curl_setopt($f1_ch, CURLOPT_URL, $f1_url);
+        // curl_setopt($f1_ch, CURLOPT_HTTPHEADER, $f1_headers);
+        // curl_setopt($f1_ch, CURLOPT_RETURNTRANSFER, 1);
+        // curl_setopt($f1_ch, CURLOPT_TIMEOUT, 3);
+        // curl_setopt($f1_ch, CURLOPT_HTTPGET, 1);
+        // curl_setopt($f1_ch, CURLOPT_SSL_VERIFYPEER, false);
+        // $f1_content = curl_exec($f1_ch);
+        // // $f1_err = curl_error($f1_ch);
+        // curl_close($f1_ch);
 
-                date_default_timezone_set('UTC');
-                $f2_tStamp = strval(time() - strtotime('1970-01-01 00:00:00'));
+        // $f1_resultarr = json_decode($f1_content, true);
+        // $f1_key = '' . $f1_data . '' . $f1_secretKey . '' . $f1_tStamp . '';
 
-                $f2_signature = hash_hmac('sha256', $f2_data . "&" . $f2_tStamp, $f2_secretKey, true);
-                $f2_encodedSignature = base64_encode($f2_signature);
 
-                $f2_ch = curl_init();
-                $f2_headers = [
-                    'X-cons-id: ' . $f2_data . '',
-                    'X-timestamp: ' . $f2_tStamp . '',
-                    'X-signature: ' . $f2_encodedSignature . '',
-                    'User-key: ' . $f2_user_key . '',
-                    'Content-Type: application/json; charset=utf-8',
-                ];
-                $f2_url = getenv('BPJS_VCLAIM_URL') . "Rujukan/RS/" . $data['data_sep']['noRujukan'];
+        // if ($f1_resultarr) {
+        //     if ($f1_resultarr['metaData']['code'] == 200) {
+        //         $f1_encrypt_method = 'AES-256-CBC';
+        //         $f1_key_hash = hex2bin(hash('sha256', $f1_key));
+        //         $f1_iv = substr(hex2bin(hash('sha256', $f1_key)), 0, 16);
+        //         $f1_output = openssl_decrypt(base64_decode($resultarr5['response']), $f1_encrypt_method, $f1_key_hash, OPENSSL_RAW_DATA, $f1_iv);
+        //         $f1_output5  = \LZCompressor\LZString::decompressFromEncodedURIComponent($f1_output);
+        //         $f1_response = json_decode($f1_output5, true);
+        //         $response_f1 = $f1_response;
+        //         $data['$response_f1'] = $response_f1;
+        //         $response = $data['$response_f1']['tglKunjungan'];
+        //         // $response = $this->stringDecrypt($f1_key, $f1_resultarr['response']);
+        //         // echo json_encode($f1_resultarr);
+        //         // echo $response;
+        //     } else {
+        //         $f2_data = getenv('BPJS_VCLAIM_CONSID');
+        //         $f2_secretKey = getenv('BPJS_VCLAIM_SIGNATURE');
+        //         $f2_user_key = getenv('BPJS_VCLAIM_USERKEY');
 
-                curl_setopt($f2_ch, CURLOPT_URL, $f2_url);
-                curl_setopt($f2_ch, CURLOPT_HTTPHEADER, $f2_headers);
-                curl_setopt($f2_ch, CURLOPT_RETURNTRANSFER, 1);
-                curl_setopt($f2_ch, CURLOPT_TIMEOUT, 3);
-                curl_setopt($f2_ch, CURLOPT_HTTPGET, 1);
-                curl_setopt($f2_ch, CURLOPT_SSL_VERIFYPEER, false);
-                $f2_content = curl_exec($f2_ch);
-                // $f2_err = curl_error($f2_ch);
-                curl_close($f2_ch);
+        //         date_default_timezone_set('UTC');
+        //         $f2_tStamp = strval(time() - strtotime('1970-01-01 00:00:00'));
 
-                $f2_resultarr = json_decode($f2_content, true);
-                $f2_key = '' . $f2_data . '' . $f2_secretKey . '' . $f2_tStamp . '';
+        //         $f2_signature = hash_hmac('sha256', $f2_data . "&" . $f2_tStamp, $f2_secretKey, true);
+        //         $f2_encodedSignature = base64_encode($f2_signature);
 
-                if ($f2_resultarr) {
-                    if ($f2_resultarr['metaData']['code'] == 200) {
-                        // $response = $this->stringDecrypt($f2_key, $f2_resultarr['response']);
-                        $f2_encrypt_method = 'AES-256-CBC';
-                        $f2_key_hash = hex2bin(hash('sha256', $f2_key));
-                        $f2_iv = substr(hex2bin(hash('sha256', $f2_key)), 0, 16);
-                        $f2_output = openssl_decrypt(base64_decode($resultarr5['response']), $f2_encrypt_method, $f2_key_hash, OPENSSL_RAW_DATA, $f2_iv);
-                        $f2_output5  = \LZCompressor\LZString::decompressFromEncodedURIComponent($f2_output);
-                        $f2_response = json_decode($f2_output5, true);
-                        $response = $f2_response;
-                        // echo json_encode($f2_resultarr);
+        //         $f2_ch = curl_init();
+        //         $f2_headers = [
+        //             'X-cons-id: ' . $f2_data . '',
+        //             'X-timestamp: ' . $f2_tStamp . '',
+        //             'X-signature: ' . $f2_encodedSignature . '',
+        //             'User-key: ' . $f2_user_key . '',
+        //             'Content-Type: application/json; charset=utf-8',
+        //         ];
+        //         $f2_url = getenv('BPJS_VCLAIM_URL') . "Rujukan/RS/" . $data['data_sep']['noRujukan'];
 
-                    } else {
-                        $response = '-';
-                    }
-                } else {
-                    $response = '-';
-                }
-            }
-        } else {
-            $response = '-';
-        }
+        //         curl_setopt($f2_ch, CURLOPT_URL, $f2_url);
+        //         curl_setopt($f2_ch, CURLOPT_HTTPHEADER, $f2_headers);
+        //         curl_setopt($f2_ch, CURLOPT_RETURNTRANSFER, 1);
+        //         curl_setopt($f2_ch, CURLOPT_TIMEOUT, 3);
+        //         curl_setopt($f2_ch, CURLOPT_HTTPGET, 1);
+        //         curl_setopt($f2_ch, CURLOPT_SSL_VERIFYPEER, false);
+        //         $f2_content = curl_exec($f2_ch);
+        //         // $f2_err = curl_error($f2_ch);
+        //         curl_close($f2_ch);
 
-        $data['rujukan'] = $response;
+        //         $f2_resultarr = json_decode($f2_content, true);
+        //         $f2_key = '' . $f2_data . '' . $f2_secretKey . '' . $f2_tStamp . '';
+
+        //         if ($f2_resultarr) {
+        //             if ($f2_resultarr['metaData']['code'] == 200) {
+        //                 // $response = $this->stringDecrypt($f2_key, $f2_resultarr['response']);
+        //                 $f2_encrypt_method = 'AES-256-CBC';
+        //                 $f2_key_hash = hex2bin(hash('sha256', $f2_key));
+        //                 $f2_iv = substr(hex2bin(hash('sha256', $f2_key)), 0, 16);
+        //                 $f2_output = openssl_decrypt(base64_decode($resultarr5['response']), $f2_encrypt_method, $f2_key_hash, OPENSSL_RAW_DATA, $f2_iv);
+        //                 $f2_output5  = \LZCompressor\LZString::decompressFromEncodedURIComponent($f2_output);
+        //                 $f2_response = json_decode($f2_output5, true);
+        //                 $response = $f2_response;
+        //                 // echo json_encode($f2_resultarr);
+
+        //             } else {
+        //                 $response = '-';
+        //             }
+        //         } else {
+        //             $response = '-';
+        //         }
+        //     }
+        // } else {
+        //     $response = '-';
+        // }
+
+        // $data['rujukan'] = $response;
         $data['content'] = '';
         $page = 'dashboard/cetak_registrasi_bpjs';
         $this->load->view($page, $data);

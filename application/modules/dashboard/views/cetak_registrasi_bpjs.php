@@ -216,10 +216,7 @@ $content .= '<div>
                         <td>No. Rujukan</td>
                         <td>: ' . $data_sep['noRujukan'] . '</td>
                     </tr>
-                    <tr>
-                        <td>Tgl Rujukan</td>
-                        <td>: ' . $rujukan . '</td>
-                    </tr>
+                   
                    
                     <tr>
                         <td>No. SEP</td>
