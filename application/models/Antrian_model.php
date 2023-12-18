@@ -777,4 +777,9 @@ class Antrian_model extends CI_Model
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function log_antrean_bpjs($data)
+    {
+        $this->db->insert('simrsj_webservice.log_antrean', $data);
+    }
 }
