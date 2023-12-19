@@ -1447,6 +1447,13 @@ class Dashboard extends MX_Controller
             $kdPenunjang = "";
             $assesmentPel = "5";
             $catatan = "Kontrol";
+        } else {
+            $noSurat = "";
+            $tujuanKunj = "0";
+            $flagProcedure = "";
+            $kdPenunjang = "";
+            $assesmentPel = "";
+            $catatan = "Kunjungan Pertama";
         }
 
         $skdp = [
@@ -2698,5 +2705,105 @@ class Dashboard extends MX_Controller
         $data['content'] = '';
         $page = 'dashboard/cetak_registrasi_bpjs';
         $this->load->view($page, $data);
+    }
+
+    public function cari_rujukan_online()
+    {
+        $f1_data = getenv('BPJS_VCLAIM_CONSID');
+        $f1_secretKey = getenv('BPJS_VCLAIM_SIGNATURE');
+        $f1_user_key = getenv('BPJS_VCLAIM_USERKEY');
+
+        date_default_timezone_set('UTC');
+        $f1_tStamp = strval(time() - strtotime('1970-01-01 00:00:00'));
+
+        $f1_signature = hash_hmac('sha256', $f1_data . "&" . $f1_tStamp, $f1_secretKey, true);
+        $f1_encodedSignature = base64_encode($f1_signature);
+
+        $f1_ch = curl_init();
+        $f1_headers = [
+            'X-cons-id: ' . $f1_data . '',
+            'X-timestamp: ' . $f1_tStamp . '',
+            'X-signature: ' . $f1_encodedSignature . '',
+            'User-key: ' . $f1_user_key . '',
+            'Content-Type: application/json; charset=utf-8',
+        ];
+        $f1_url = getenv('BPJS_VCLAIM_URL') . "Rujukan/RS/Peserta/" . $_POST['noKartu'];
+
+        curl_setopt($f1_ch, CURLOPT_URL, $f1_url);
+        curl_setopt($f1_ch, CURLOPT_HTTPHEADER, $f1_headers);
+        curl_setopt($f1_ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($f1_ch, CURLOPT_TIMEOUT, 3);
+        curl_setopt($f1_ch, CURLOPT_HTTPGET, 1);
+        curl_setopt($f1_ch, CURLOPT_SSL_VERIFYPEER, false);
+        $f1_content = curl_exec($f1_ch);
+        // $f1_err = curl_error($f1_ch);
+        curl_close($f1_ch);
+
+        $f1_resultarr = json_decode($f1_content, true);
+        $f1_key = '' . $f1_data . '' . $f1_secretKey . '' . $f1_tStamp . '';
+        if ($f1_resultarr) {
+            if ($f1_resultarr['metaData']['code'] == 200) {
+                $response = $this->stringDecrypt($f1_key, $f1_resultarr['response']);
+                // echo json_encode($f1_resultarr);
+                echo $response;
+            } else {
+                $f2_data = getenv('BPJS_VCLAIM_CONSID');
+                $f2_secretKey = getenv('BPJS_VCLAIM_SIGNATURE');
+                $f2_user_key = getenv('BPJS_VCLAIM_USERKEY');
+
+                date_default_timezone_set('UTC');
+                $f2_tStamp = strval(time() - strtotime('1970-01-01 00:00:00'));
+
+                $f2_signature = hash_hmac('sha256', $f2_data . "&" . $f2_tStamp, $f2_secretKey, true);
+                $f2_encodedSignature = base64_encode($f2_signature);
+
+                $f2_ch = curl_init();
+                $f2_headers = [
+                    'X-cons-id: ' . $f2_data . '',
+                    'X-timestamp: ' . $f2_tStamp . '',
+                    'X-signature: ' . $f2_encodedSignature . '',
+                    'User-key: ' . $f2_user_key . '',
+                    'Content-Type: application/json; charset=utf-8',
+                ];
+                $f2_url = getenv('BPJS_VCLAIM_URL') . "Rujukan/Peserta/" . $_POST['noKartu'];
+
+                curl_setopt($f2_ch, CURLOPT_URL, $f2_url);
+                curl_setopt($f2_ch, CURLOPT_HTTPHEADER, $f2_headers);
+                curl_setopt($f2_ch, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($f2_ch, CURLOPT_TIMEOUT, 3);
+                curl_setopt($f2_ch, CURLOPT_HTTPGET, 1);
+                curl_setopt($f2_ch, CURLOPT_SSL_VERIFYPEER, false);
+                $f2_content = curl_exec($f2_ch);
+                // $f2_err = curl_error($f2_ch);
+                curl_close($f2_ch);
+
+                $f2_resultarr = json_decode($f2_content, true);
+                $f2_key = '' . $f2_data . '' . $f2_secretKey . '' . $f2_tStamp . '';
+
+                if ($f2_resultarr) {
+                    if ($f2_resultarr['metaData']['code'] == 200) {
+                        $response = $this->stringDecrypt($f2_key, $f2_resultarr['response']);
+                        // echo json_encode($f2_resultarr);
+                        echo $response;
+                    } else {
+                        echo json_encode($f2_resultarr);
+                    }
+                } else {
+                    echo json_encode([
+                        'metaData' => [
+                            'message' => 'Coba lagi',
+                            'code' => 201
+                        ],
+                    ], 201);
+                }
+            }
+        } else {
+            echo json_encode([
+                'metaData' => [
+                    'message' => 'Coba lagi',
+                    'code' => 201
+                ],
+            ], 201);
+        }
     }
 }
