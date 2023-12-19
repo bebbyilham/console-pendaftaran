@@ -189,6 +189,10 @@ $content .= '<div>
                         <td style="width: 70%">: ' . $data_kunjungan['noregistrasi'] . '</td>
                     </tr>
                     <tr>
+                        <td>No. RM</td>
+                        <td>: ' . $data_kunjungan['nomr'] . '</td>
+                    </tr>
+                    <tr>
                         <td>Nama Pasien</td>
                         <td>: ' . $data_kunjungan['namapasien'] . '</td>
                     </tr>
@@ -250,10 +254,12 @@ $style = array(
 );
 // $pdf->Cell(0, 40, '', 0, 1, 'L');
 // $pdf->Cell(1, 1, 'SCAN', 0, 1, 'C');
-$pdf->write1DBarcode($data_sep['noRujukan'], 'C128', 31, 90, 20, 5, 1.1, $style, 'N');
+$pdf->write1DBarcode($data_sep['noRujukan'], 'C128', 28, 90, 25, 10, 1.1, $style, 'N');
 $pdf->SetFont('dejavusans', '', 4);
 $pdf->Cell(62, 1, 'Rujukan', 0, 1, 'C');
-$pdf->write1DBarcode($data_sep['noSep'], 'C128', 31, 100, 20, 5, 1.1, $style, 'N');
+$pdf->write1DBarcode($data_sep['noSep'], 'C128', 28, 105, 25, 10, 1.1, $style, 'N');
 $pdf->Cell(62, 1, 'SEP', 0, 1, 'C');
+$pdf->write1DBarcode($data_kunjungan['nomr'], 'C128', 28, 120, 25, 10, 1.1, $style, 'N');
+$pdf->Cell(62, 1, 'No. RM', 0, 1, 'C');
 ob_end_clean();
 $pdf->Output('LEMBAR SEP RAJAL.pdf');
