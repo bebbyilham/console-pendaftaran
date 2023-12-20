@@ -843,218 +843,281 @@
                                       //       title: 'Kunjungan Tidak Sesuai',
                                       //       text: 'Silahkan mendaftar melalui admisi',
                                       //   });
-                                      var tanggalRencanaKunjungan = data.metadata.result.tanggalperiksa
-                                      var poliTujuan = data.metadata.result.kodepoli
-                                      var kodeDokter = data.metadata.result.kodedokter
-                                      var jeniskunjungan = cek_jeniskunjungan
-                                      if (tanggalRencanaKunjungan == date) {
+                                      $.ajax({
+                                          url: '<?php echo base_url(); ?>dashboard/cek_kunjungan',
+                                          method: 'POST',
+                                          data: {
+                                              kodebooking: result_kodebooking
+                                          },
+                                          dataType: 'JSON',
+                                          success: function(data) {
+                                              var code_cek_kunjungan = data.metadata.code
+                                              var message_cek_kunjungan = data.metadata.message
+                                              if (code_cek_kunjungan == '200') {
+                                                  var tanggalRencanaKunjungan = data.metadata.result.tanggalperiksa
+                                                  var poliTujuan = data.metadata.result.kodepoli
+                                                  var kodeDokter = data.metadata.result.kodedokter
+                                                  var jeniskunjungan = cek_jeniskunjungan
+                                                  if (tanggalRencanaKunjungan == date) {
 
-                                          $.ajax({
-                                              url: '<?php echo base_url(); ?>dashboard/cari_rujukan_online',
-                                              method: 'POST',
-                                              dataType: 'JSON',
-                                              data: {
-                                                  noKartu: noKartu,
-                                              },
-                                              success: function(data) {
-                                                  console.log('cek_online_rujukan', data);
-
-                                                  if (!data.metaData) {
-                                                      $('.message_cek').text('Rujukan diproses');
-                                                      var asalFaskes = data.asalFaskes
-                                                      var noRujukan = data.rujukan.noKunjungan
-
-                                                      var diagAwal = data.rujukan.diagnosa.kode
-                                                      var ppkRujukan = data.rujukan.provPerujuk.kode
-                                                      var noTelp = data.rujukan.peserta.mr.noTelepon
-                                                      var klsRawatHak = data.rujukan.peserta.mr.noTelepon
-                                                      var namappkRujukan = data.rujukan.provPerujuk.nama
-                                                      var kdProviderPerujuk = data.rujukan.provPerujuk.kode
-                                                      var nikRujukan = data.rujukan.peserta.nik
-                                                      var noBpjsRujukan = data.rujukan.peserta.noKartu
                                                       $.ajax({
-                                                          url: '<?php echo base_url(); ?>dashboard/cek_jadwaldokter',
+                                                          url: '<?php echo base_url(); ?>dashboard/cari_rujukan_online',
                                                           method: 'POST',
                                                           dataType: 'JSON',
                                                           data: {
-                                                              tglRencanaKontrol: tanggalRencanaKunjungan,
-                                                              poliTujuan: poliTujuan,
-                                                              kodeDokter: kodeDokter
+                                                              noKartu: noKartu,
                                                           },
                                                           success: function(data) {
-                                                              var code_cek_jadwal = data.metadata.code
-                                                              var message_cek_jadwal = data.metadata.message
-                                                              console.log('message_cek_jadwal', data);
-                                                              if (code_cek_jadwal == '200') {
-                                                                  $('.message_cek').text(message_cek_jadwal);
+                                                              console.log('cek_online_rujukan', data);
 
-                                                                  $('.message_cek').text('Penerbitan E-SEP');
+                                                              if (!data.metaData) {
+                                                                  $('.message_cek').text('Rujukan diproses');
+                                                                  var asalFaskes = data.asalFaskes
+                                                                  var noRujukan = data.rujukan.noKunjungan
 
+                                                                  var diagAwal = data.rujukan.diagnosa.kode
+                                                                  var ppkRujukan = data.rujukan.provPerujuk.kode
+                                                                  var noTelp = data.rujukan.peserta.mr.noTelepon
+                                                                  var klsRawatHak = data.rujukan.peserta.mr.noTelepon
+                                                                  var namappkRujukan = data.rujukan.provPerujuk.nama
+                                                                  var kdProviderPerujuk = data.rujukan.provPerujuk.kode
+                                                                  var nikRujukan = data.rujukan.peserta.nik
+                                                                  var noBpjsRujukan = data.rujukan.peserta.noKartu
                                                                   $.ajax({
-                                                                      url: '<?php echo base_url(); ?>dashboard/insertSEP',
+                                                                      url: '<?php echo base_url(); ?>dashboard/cek_jadwaldokter',
                                                                       method: 'POST',
-                                                                      data: {
-                                                                          noMR: noMR,
-                                                                          noKartu: noKartu,
-                                                                          asalRujukan: asalFaskes,
-                                                                          ppkRujukan: ppkRujukan,
-                                                                          noRujukan: noRujukan,
-                                                                          tglRujukan: tanggalRencanaKunjungan,
-                                                                          diagAwal: diagAwal,
-                                                                          noTelp: noTelp,
-                                                                          poliTujuan: poliTujuan,
-                                                                          kodeDokter: kodeDokter,
-                                                                          kdProviderPerujuk: kdProviderPerujuk,
-                                                                          jeniskunjungan: jeniskunjungan,
-
-                                                                          poliTujuan: poliTujuan,
-                                                                          noSuratKontrol: noSuratKontrol,
-
-                                                                          user: 'APM',
-                                                                      },
                                                                       dataType: 'JSON',
+                                                                      data: {
+                                                                          tglRencanaKontrol: tanggalRencanaKunjungan,
+                                                                          poliTujuan: poliTujuan,
+                                                                          kodeDokter: kodeDokter
+                                                                      },
                                                                       success: function(data) {
-                                                                          console.log('data_SEP', data);
-                                                                          if (!data.metaData) {
-                                                                              var nosep = data.sep.noSep;
-                                                                              var tglSep = data.sep.tglSep;
-                                                                              var jnsPelayanan = data.sep.jnsPelayanan;
-                                                                              var kelasRawat = data.sep.kelasRawat;
-                                                                              var kodeDiagnosa = diagAwal;
-                                                                              var diagnosa = data.sep.diagnosa;
-                                                                              var noRujukan = data.sep.noRujukan;
-                                                                              var poli = data.sep.poli;
-                                                                              var poliEksekutif = data.sep.poliEksekutif;
-                                                                              var catatan = data.sep.catatan;
-                                                                              var penjamin = data.sep.penjamin;
-                                                                              var noKartu = data.sep.peserta.noKartu;
-                                                                              var nama = data.sep.peserta.nama;
-                                                                              var tglLahir = data.sep.peserta.tglLahir;
-                                                                              var noMr = data.sep.peserta.noMr;
-                                                                              var kelamin = data.sep.peserta.kelamin;
-                                                                              var jnsPeserta = data.sep.peserta.jnsPeserta;
-                                                                              var hakKelas = data.sep.peserta.hakKelas;
-                                                                              var asuransi = data.sep.peserta.asuransi;
-                                                                              var dinsos = data.sep.informasi.dinsos;
-                                                                              var prolanisPRB = data.sep.informasi.prolanisPRB;
-                                                                              var noSKTM = data.sep.informasi.noSKTM;
-                                                                              var namaDokter = nama_dokter;
-                                                                              var namaPpk = namappkRujukan;
-                                                                              var kelasRawatNaik = '-';
-                                                                              var pembiayaan = '-';
-                                                                              var nomorTelp = noTelp;
-                                                                              var tujuanKunj = data.sep.tujuanKunj;
-                                                                              var flagProcedure = data.sep.flagProcedure;
-                                                                              var kodePenunjang = 'tidak ada';
-                                                                              var assestmenPel = data.sep.assestmenPel;
-                                                                              $('.message_cek').text('Penerbitan E-SEP Berhasil');
+                                                                          var code_cek_jadwal = data.metadata.code
+                                                                          var message_cek_jadwal = data.metadata.message
+                                                                          console.log('message_cek_jadwal', data);
+                                                                          if (code_cek_jadwal == '200') {
+                                                                              $('.message_cek').text(message_cek_jadwal);
+
+                                                                              $('.message_cek').text('Penerbitan E-SEP');
+
                                                                               $.ajax({
-                                                                                  url: '<?php echo base_url(); ?>dashboard/pendaftaran_pasien',
+                                                                                  url: '<?php echo base_url(); ?>dashboard/insertSEP',
                                                                                   method: 'POST',
                                                                                   data: {
-                                                                                      norm: noMR,
-                                                                                      kodepoli: poliTujuan,
-                                                                                      kodedokter: kodeDokter,
-                                                                                      tanggalperiksa: tanggalRencanaKunjungan,
-                                                                                      kodebooking: result_kodebooking,
-                                                                                      nomorkartu: noKartu,
-                                                                                      nosep: nosep,
+                                                                                      noMR: noMR,
+                                                                                      noKartu: noKartu,
+                                                                                      asalRujukan: asalFaskes,
+                                                                                      ppkRujukan: ppkRujukan,
+                                                                                      noRujukan: noRujukan,
+                                                                                      tglRujukan: tanggalRencanaKunjungan,
+                                                                                      diagAwal: diagAwal,
+                                                                                      noTelp: noTelp,
+                                                                                      poliTujuan: poliTujuan,
+                                                                                      kodeDokter: kodeDokter,
+                                                                                      kdProviderPerujuk: kdProviderPerujuk,
+                                                                                      jeniskunjungan: jeniskunjungan,
+
+                                                                                      poliTujuan: poliTujuan,
+                                                                                      noSuratKontrol: noSuratKontrol,
+
+                                                                                      user: 'APM',
                                                                                   },
                                                                                   dataType: 'JSON',
                                                                                   success: function(data) {
-                                                                                      //   console.log('KV', data);
+                                                                                      console.log('data_SEP', data);
+                                                                                      if (!data.metaData) {
+                                                                                          var nosep = data.sep.noSep;
+                                                                                          var tglSep = data.sep.tglSep;
+                                                                                          var jnsPelayanan = data.sep.jnsPelayanan;
+                                                                                          var kelasRawat = data.sep.kelasRawat;
+                                                                                          var kodeDiagnosa = diagAwal;
+                                                                                          var diagnosa = data.sep.diagnosa;
+                                                                                          var noRujukan = data.sep.noRujukan;
+                                                                                          var poli = data.sep.poli;
+                                                                                          var poliEksekutif = data.sep.poliEksekutif;
+                                                                                          var catatan = data.sep.catatan;
+                                                                                          var penjamin = data.sep.penjamin;
+                                                                                          var noKartu = data.sep.peserta.noKartu;
+                                                                                          var nama = data.sep.peserta.nama;
+                                                                                          var tglLahir = data.sep.peserta.tglLahir;
+                                                                                          var noMr = data.sep.peserta.noMr;
+                                                                                          var kelamin = data.sep.peserta.kelamin;
+                                                                                          var jnsPeserta = data.sep.peserta.jnsPeserta;
+                                                                                          var hakKelas = data.sep.peserta.hakKelas;
+                                                                                          var asuransi = data.sep.peserta.asuransi;
+                                                                                          var dinsos = data.sep.informasi.dinsos;
+                                                                                          var prolanisPRB = data.sep.informasi.prolanisPRB;
+                                                                                          var noSKTM = data.sep.informasi.noSKTM;
+                                                                                          var namaDokter = nama_dokter;
+                                                                                          var namaPpk = namappkRujukan;
+                                                                                          var kelasRawatNaik = '-';
+                                                                                          var pembiayaan = '-';
+                                                                                          var nomorTelp = noTelp;
+                                                                                          var tujuanKunj = data.sep.tujuanKunj;
+                                                                                          var flagProcedure = data.sep.flagProcedure;
+                                                                                          var kodePenunjang = 'tidak ada';
+                                                                                          var assestmenPel = data.sep.assestmenPel;
+                                                                                          $('.message_cek').text('Penerbitan E-SEP Berhasil');
+                                                                                          $.ajax({
+                                                                                              url: '<?php echo base_url(); ?>dashboard/pendaftaran_pasien',
+                                                                                              method: 'POST',
+                                                                                              data: {
+                                                                                                  norm: noMR,
+                                                                                                  kodepoli: poliTujuan,
+                                                                                                  kodedokter: kodeDokter,
+                                                                                                  tanggalperiksa: tanggalRencanaKunjungan,
+                                                                                                  kodebooking: result_kodebooking,
+                                                                                                  nomorkartu: noKartu,
+                                                                                                  nosep: nosep,
+                                                                                              },
+                                                                                              dataType: 'JSON',
+                                                                                              success: function(data) {
+                                                                                                  //   console.log('KV', data);
 
-                                                                                      var noregistrasi = data.metadata.result.noregistrasi
+                                                                                                  var noregistrasi = data.metadata.result.noregistrasi
 
-                                                                                      $.ajax({
-                                                                                          url: '<?php echo base_url(); ?>dashboard/insert_sep_db',
-                                                                                          method: 'POST',
-                                                                                          data: {
-                                                                                              noregistrasi: noregistrasi,
-                                                                                              nosep: nosep,
-                                                                                              tglSep: tglSep,
-                                                                                              jnsPelayanan: jnsPelayanan,
-                                                                                              kelasRawat: kelasRawat,
-                                                                                              kodeDiagnosa: kodeDiagnosa,
-                                                                                              diagnosa: diagnosa,
-                                                                                              noRujukan: noRujukan,
-                                                                                              poli: poli,
-                                                                                              poliEksekutif: poliEksekutif,
-                                                                                              catatan: catatan,
-                                                                                              penjamin: penjamin,
-                                                                                              noKartu: noKartu,
-                                                                                              nama: nama,
-                                                                                              tglLahir: tglLahir,
-                                                                                              noMr: noMr,
-                                                                                              kelamin: kelamin,
-                                                                                              jnsPeserta: jnsPeserta,
-                                                                                              hakKelas: hakKelas,
-                                                                                              asuransi: asuransi,
-                                                                                              dinsos: dinsos,
-                                                                                              prolanisPRB: prolanisPRB,
-                                                                                              noSKTM: noSKTM,
-                                                                                              namaDokter: namaDokter,
-                                                                                              namaPpk: namaPpk,
-                                                                                              kelasRawatNaik: kelasRawatNaik,
-                                                                                              pembiayaan: pembiayaan,
-                                                                                              nomorTelp: nomorTelp,
-                                                                                              tujuanKunj: tujuanKunj,
-                                                                                              flagProcedure: flagProcedure,
-                                                                                              kodePenunjang: kodePenunjang,
-                                                                                              assestmenPel: assestmenPel,
-                                                                                          },
-                                                                                          dataType: 'JSON',
-                                                                                          success: function(data) {
-                                                                                              setTimeout(function() {
-                                                                                                  swal.fire({
-                                                                                                      icon: 'success',
-                                                                                                      html: '<h4>Berhasil</h4>'
+                                                                                                  $.ajax({
+                                                                                                      url: '<?php echo base_url(); ?>dashboard/insert_sep_db',
+                                                                                                      method: 'POST',
+                                                                                                      data: {
+                                                                                                          noregistrasi: noregistrasi,
+                                                                                                          nosep: nosep,
+                                                                                                          tglSep: tglSep,
+                                                                                                          jnsPelayanan: jnsPelayanan,
+                                                                                                          kelasRawat: kelasRawat,
+                                                                                                          kodeDiagnosa: kodeDiagnosa,
+                                                                                                          diagnosa: diagnosa,
+                                                                                                          noRujukan: noRujukan,
+                                                                                                          poli: poli,
+                                                                                                          poliEksekutif: poliEksekutif,
+                                                                                                          catatan: catatan,
+                                                                                                          penjamin: penjamin,
+                                                                                                          noKartu: noKartu,
+                                                                                                          nama: nama,
+                                                                                                          tglLahir: tglLahir,
+                                                                                                          noMr: noMr,
+                                                                                                          kelamin: kelamin,
+                                                                                                          jnsPeserta: jnsPeserta,
+                                                                                                          hakKelas: hakKelas,
+                                                                                                          asuransi: asuransi,
+                                                                                                          dinsos: dinsos,
+                                                                                                          prolanisPRB: prolanisPRB,
+                                                                                                          noSKTM: noSKTM,
+                                                                                                          namaDokter: namaDokter,
+                                                                                                          namaPpk: namaPpk,
+                                                                                                          kelasRawatNaik: kelasRawatNaik,
+                                                                                                          pembiayaan: pembiayaan,
+                                                                                                          nomorTelp: nomorTelp,
+                                                                                                          tujuanKunj: tujuanKunj,
+                                                                                                          flagProcedure: flagProcedure,
+                                                                                                          kodePenunjang: kodePenunjang,
+                                                                                                          assestmenPel: assestmenPel,
+                                                                                                      },
+                                                                                                      dataType: 'JSON',
+                                                                                                      success: function(data) {
+                                                                                                          setTimeout(function() {
+                                                                                                              swal.fire({
+                                                                                                                  icon: 'success',
+                                                                                                                  html: '<h4>Berhasil</h4>'
+                                                                                                              });
+                                                                                                          }, 700);
+
+                                                                                                      }
                                                                                                   });
-                                                                                              }, 700);
 
-                                                                                          }
-                                                                                      });
+                                                                                              }
+                                                                                          });
+
+
+                                                                                      } else {
+                                                                                          setTimeout(function() {
+                                                                                              swal.fire({
+                                                                                                  icon: 'error',
+                                                                                                  title: 'Peringatan',
+                                                                                                  text: data.metaData.message,
+                                                                                              });
+                                                                                          }, 700);
+
+                                                                                      }
 
                                                                                   }
                                                                               });
 
-
                                                                           } else {
-                                                                              setTimeout(function() {
-                                                                                  swal.fire({
-                                                                                      icon: 'error',
-                                                                                      title: 'Peringatan',
-                                                                                      text: data.metaData.message,
-                                                                                  });
-                                                                              }, 700);
-
+                                                                              Swal.fire({
+                                                                                  icon: 'error',
+                                                                                  title: 'Jadwal Dokter Tidak Sesuai',
+                                                                                  text: 'Silahkan mendaftar melalui admisi',
+                                                                              });
                                                                           }
 
                                                                       }
                                                                   });
-
                                                               } else {
+                                                                  $('#btn_cek_kodebooking').attr('disabled', false);
+                                                                  var noreg = data.metadata.result.datakunjungan.no_registrasi
                                                                   Swal.fire({
-                                                                      icon: 'error',
-                                                                      title: 'Jadwal Dokter Tidak Sesuai',
-                                                                      text: 'Silahkan mendaftar melalui admisi',
-                                                                  });
-                                                              }
+                                                                      title: data.metadata.message,
+                                                                      text: "Apakah anda ingin mencetak Bukti Registrasi ?",
+                                                                      icon: 'info',
+                                                                      showCancelButton: true,
+                                                                      confirmButtonColor: '#3085d6',
+                                                                      cancelButtonColor: '#d33',
+                                                                      confirmButtonText: 'Ya',
+                                                                      cancelButtonText: 'Tidak'
+                                                                  }).then((result) => {
+                                                                      if (result.isConfirmed) {
+                                                                          qz.printers.find("Receipt").then(function(printer) {
+                                                                              var config = qz.configs.create(printer);
+                                                                              //   console.log(noreg);
+                                                                              var no_reg = noreg;
 
+                                                                              // Raw ZPL
+                                                                              // var angka = noantrean;
+                                                                              var today = new Date();
+                                                                              var month = today.getMonth() + 1;
+                                                                              var time = today.getDate() + "/" + month + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+                                                                              var data = [{
+                                                                                  type: 'pixel',
+                                                                                  format: 'pdf',
+                                                                                  flavor: 'file',
+                                                                                  data: '<?= base_url('dashboard/cetak_registrasi_bpjs/') ?>' + no_reg
+                                                                              }];
+                                                                              return qz.print(config, data);
+                                                                          }).catch(function(e) {
+                                                                              console.log(e);
+                                                                              //   alert("Printer Tidak Ditemukan");
+                                                                              Swal.fire({
+                                                                                  icon: 'error',
+                                                                                  title: 'Printer Tidak Ditemukan',
+                                                                                  text: data.metadata.message,
+                                                                              });
+
+                                                                          });
+
+                                                                          $('#modal-kodebooking-jkn').modal('hide');
+                                                                      }
+                                                                  })
+                                                              }
                                                           }
                                                       });
                                                   } else {
-
+                                                      Swal.fire({
+                                                          icon: 'error',
+                                                          title: 'Tanggal Kunjungan Tidak Sesuai',
+                                                          text: 'Silahkan mendaftar melalui admisi',
+                                                      });
                                                   }
+                                              } else {
+
                                               }
-                                          });
-                                      } else {
-                                          Swal.fire({
-                                              icon: 'error',
-                                              title: 'Tanggal Kunjungan Tidak Sesuai',
-                                              text: 'Silahkan mendaftar melalui admisi',
-                                          });
-                                      }
+
+                                          }
+                                      });
+
+
+
 
                                   } else if (cek_jeniskunjungan == '2') {
                                       Swal.fire({
