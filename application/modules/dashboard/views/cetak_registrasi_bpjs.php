@@ -198,7 +198,7 @@ $content .= '<div>
                     </tr>
                     <tr>
                         <td>Tanggal Lahir</td>
-                        <td>: ' . $data_kunjungan['tempat_lahir'] . '</td>
+                        <td>: ' . $data_kunjungan['tanggal_lahir'] . '</td>
                     </tr>
                     <tr>
                         <td>Umur</td>

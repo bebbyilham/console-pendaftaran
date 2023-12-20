@@ -1116,9 +1116,6 @@
                                           }
                                       });
 
-
-
-
                                   } else if (cek_jeniskunjungan == '2') {
                                       Swal.fire({
                                           icon: 'error',
