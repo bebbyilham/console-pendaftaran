@@ -763,6 +763,7 @@
                                                                                                                               });
 
                                                                                                                           });
+                                                                                                                          $('#modal-kodebooking-jkn').modal('hide');
                                                                                                                       }, 700);
 
                                                                                                                   }
@@ -1092,6 +1093,7 @@
                                                                                                                   html: '<h4>Berhasil</h4>'
                                                                                                               });
                                                                                                           }, 700);
+                                                                                                          $('#modal-kodebooking-jkn').modal('hide');
 
                                                                                                       }
                                                                                                   });
@@ -1668,6 +1670,7 @@
                                                                                                                                                                           icon: 'success',
                                                                                                                                                                           html: '<h4>Berhasil</h4>'
                                                                                                                                                                       });
+                                                                                                                                                                      $('#modal-onsite-jkn').modal('hide');
 
                                                                                                                                                                       qz.printers.find("Receipt").then(function(printer) {
 
@@ -1894,6 +1897,7 @@
                                                           });
 
                                                       });
+                                                      $('#modal-onsite-jkn').modal('hide');
                                                       //RECEIPT
                                                       //   qz.printers.find("Receipt").then(function(printer) {
                                                       //       // Create a default config for the found printer
