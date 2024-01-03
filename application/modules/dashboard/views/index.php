@@ -514,7 +514,7 @@
                                                           var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
                                                           var dateTime = date + ' ' + time;
 
-                                                          //   console.log(dateTime)
+                                                          console.log(date)
 
                                                           if (!data.metaData) {
                                                               var noSuratKontrol = data.noSuratKontrol
@@ -530,7 +530,7 @@
                                                               var tglRencanaKontrol = data.tglRencanaKontrol
                                                               var kodeDokter = data.kodeDokter
 
-                                                              if (tglRencanaKontrol == date) {
+                                                              if (tglRencanaKontrol === date) {
                                                                   $.ajax({
                                                                       url: '<?php echo base_url(); ?>dashboard/cek_jadwaldokter',
                                                                       method: 'POST',
