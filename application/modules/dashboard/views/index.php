@@ -510,11 +510,26 @@
                                                           console.log('cek_surkon', data);
                                                           $('.message_cek').text('Pengecekan Surat Kontrol');
                                                           var today = new Date();
-                                                          var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+                                                          var month = '' + today.getMonth() + 1
+                                                          var day = '' + today.getDate()
+                                                          if (day.length < 2) {
+                                                              var d = '0' + day
+                                                          } else {
+                                                              var d = day
+                                                          }
+                                                          if (month.length < 2) {
+                                                              var m = '0' + month + 1
+                                                          } else {
+                                                              var m = month
+                                                          }
+
+                                                          var date = today.getFullYear() + '-' + m + '-' + d;
+
+
                                                           var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
                                                           var dateTime = date + ' ' + time;
 
-                                                          console.log(date)
+                                                          //   console.log(dateTime)
 
                                                           if (!data.metaData) {
                                                               var noSuratKontrol = data.noSuratKontrol
@@ -530,7 +545,7 @@
                                                               var tglRencanaKontrol = data.tglRencanaKontrol
                                                               var kodeDokter = data.kodeDokter
 
-                                                              if (tglRencanaKontrol === date) {
+                                                              if (tglRencanaKontrol == date) {
                                                                   $.ajax({
                                                                       url: '<?php echo base_url(); ?>dashboard/cek_jadwaldokter',
                                                                       method: 'POST',
