@@ -529,7 +529,7 @@
                                                           var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
                                                           var dateTime = date + ' ' + time;
 
-                                                          //   console.log(dateTime)
+                                                          console.log('date', date)
 
                                                           if (!data.metaData) {
                                                               var noSuratKontrol = data.noSuratKontrol
