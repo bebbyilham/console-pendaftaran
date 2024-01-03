@@ -1372,9 +1372,26 @@
                                                                               success: function(data) {
 
                                                                                   var today = new Date();
-                                                                                  var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+                                                                                  var month = '' + today.getMonth() + 1
+                                                                                  var day = '' + today.getDate()
+                                                                                  if (day.length < 2) {
+                                                                                      var d = '0' + day
+                                                                                  } else {
+                                                                                      var d = day
+                                                                                  }
+                                                                                  if (month.length < 2) {
+                                                                                      var m = '0' + month + 1
+                                                                                  } else {
+                                                                                      var m = month
+                                                                                  }
+
+                                                                                  var date = today.getFullYear() + '-' + m + '-' + d;
+
+
                                                                                   var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
                                                                                   var dateTime = date + ' ' + time;
+
+                                                                                  console.log('date', date)
 
                                                                                   if (!data.metaData) {
                                                                                       $('.message_cek').text('Surat Kontrol diproses');
