@@ -75,8 +75,13 @@
                           <div class="card-body">
                               <div class="row">
                                   <div class="col">
-                                      <h5 class="card-title text-uppercase text-muted mb-0">Tanggal</h5>
-                                      <span class="h2 font-weight-bold mb-0"><?= date('d-m-Y') ?></span>
+                                      <h5 class="card-title text-uppercase text-muted mb-0">Jadwal Dokter Poli Jiwa</h5>
+                                      <marquee>
+                                          <?php foreach ($jadwaldokter as $row) {
+                                                echo '<span class="h2 font-weight-bold mb-0">' . $row['dokter_nama'] . ' |</span> ';
+                                            }
+                                            ?>
+                                      </marquee>
                                   </div>
                                   <div class="col-auto">
                                       <div class="icon icon-shape bg-gradient-red text-white rounded-circle shadow">
@@ -107,7 +112,8 @@
                           <div class="card-body">
                               <div class="row">
                                   <div class="col">
-                                      <h5 class="card-title text-uppercase text-muted mb-0">Jam</h5>
+                                      <h5 class="card-title text-uppercase text-muted mb-0">Waktu</h5>
+                                      <span class="h2 font-weight-bold mb-0"><?= date('d-m-Y') ?></span>
                                       <span class="h2 font-weight-bold mb-0"><span id="jam"></span> : <span id="menit"></span> : <span id="detik"></span></span>
                                   </div>
                                   <div class="col-auto">
@@ -123,7 +129,6 @@
                           </div>
                       </div>
                   </div>
-
               </div>
           </div>
       </div>

@@ -31,6 +31,7 @@ class Dashboard extends MX_Controller
         $data['sisa_antrian_farmasi'] = $this->Antrian_model->sisa_antrian_farmasi();
         $data['sisa_antrian_batal'] = $this->Antrian_model->sisa_antrian_batal();
         $data['sejiwa_url'] = getenv('SEJIWA_URL');
+        $data['jadwaldokter'] = $this->db->get_where('simrsj_webservice.jadwal_dokter', ['hari' => date("N"), 'statusjadwal' => 1, 'poli_kdsubspesialis' => 'JIW'])->result_array();
 
         $data['content'] = '';
         $page = 'dashboard/index';
