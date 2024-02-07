@@ -514,24 +514,18 @@
                                                       success: function(data) {
                                                           console.log('cek_surkon', data);
                                                           $('.message_cek').text('Pengecekan Surat Kontrol');
+
                                                           var today = new Date();
-                                                          var month = '' + today.getMonth() + 1
-                                                          var day = '' + today.getDate()
-                                                          if (day.length < 2) {
-                                                              var d = '0' + day
-                                                          } else {
-                                                              var d = day
-                                                          }
-                                                          if (month.length < 2) {
-                                                              var m = '0' + month + 1
-                                                          } else {
-                                                              var m = month
-                                                          }
-
-                                                          var date = today.getFullYear() + '-' + m + '-' + d;
-
-
+                                                          var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
                                                           var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+
+                                                          var formatter = new Intl.DateTimeFormat('fr-CA', {
+                                                              day: '2-digit',
+                                                              month: '2-digit',
+                                                              year: 'numeric'
+                                                          });
+                                                          var formattedDate = formatter.format(today);
+
                                                           var dateTime = date + ' ' + time;
 
                                                           console.log('date', date)
@@ -913,6 +907,14 @@
                                       var today = new Date();
                                       var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
                                       var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+
+                                      var formatter = new Intl.DateTimeFormat('fr-CA', {
+                                          day: '2-digit',
+                                          month: '2-digit',
+                                          year: 'numeric'
+                                      });
+                                      var formattedDate = formatter.format(today);
+
                                       var dateTime = date + ' ' + time;
                                       //   Swal.fire({
                                       //       icon: 'info',
@@ -1379,23 +1381,16 @@
                                                                               success: function(data) {
 
                                                                                   var today = new Date();
-                                                                                  var month = '' + today.getMonth() + 1
-                                                                                  var day = '' + today.getDate()
-                                                                                  if (day.length < 2) {
-                                                                                      var d = '0' + day
-                                                                                  } else {
-                                                                                      var d = day
-                                                                                  }
-                                                                                  if (month.length < 2) {
-                                                                                      var m = '0' + month + 1
-                                                                                  } else {
-                                                                                      var m = month
-                                                                                  }
-
-                                                                                  var date = today.getFullYear() + '-' + m + '-' + d;
-
-
+                                                                                  var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
                                                                                   var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+
+                                                                                  var formatter = new Intl.DateTimeFormat('fr-CA', {
+                                                                                      day: '2-digit',
+                                                                                      month: '2-digit',
+                                                                                      year: 'numeric'
+                                                                                  });
+                                                                                  var formattedDate = formatter.format(today);
+
                                                                                   var dateTime = date + ' ' + time;
 
                                                                                   console.log('date', date)
