@@ -524,7 +524,7 @@
                                                               month: '2-digit',
                                                               year: 'numeric'
                                                           });
-                                                          var formattedDate = formatter.format(today);
+                                                          var formattedDate = formatter.format(date);
 
                                                           var dateTime = date + ' ' + time;
 
@@ -913,7 +913,7 @@
                                           month: '2-digit',
                                           year: 'numeric'
                                       });
-                                      var formattedDate = formatter.format(today);
+                                      var formattedDate = formatter.format(date);
 
                                       var dateTime = date + ' ' + time;
                                       //   Swal.fire({
@@ -1389,7 +1389,7 @@
                                                                                       month: '2-digit',
                                                                                       year: 'numeric'
                                                                                   });
-                                                                                  var formattedDate = formatter.format(today);
+                                                                                  var formattedDate = formatter.format(date);
 
                                                                                   var dateTime = date + ' ' + time;
 
