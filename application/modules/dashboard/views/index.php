@@ -529,6 +529,7 @@
                                                           var dateTime = date + ' ' + time;
 
                                                           console.log('date', date)
+                                                          console.log('formattedDate', formattedDate)
 
                                                           if (!data.metaData) {
                                                               var noSuratKontrol = data.noSuratKontrol
@@ -544,7 +545,7 @@
                                                               var tglRencanaKontrol = data.tglRencanaKontrol
                                                               var kodeDokter = data.kodeDokter
 
-                                                              if (tglRencanaKontrol == date) {
+                                                              if (tglRencanaKontrol == formattedDate) {
                                                                   $.ajax({
                                                                       url: '<?php echo base_url(); ?>dashboard/cek_jadwaldokter',
                                                                       method: 'POST',
@@ -1394,12 +1395,13 @@
                                                                                   var dateTime = date + ' ' + time;
 
                                                                                   console.log('date', date)
+                                                                                  console.log('formattedDate', formattedDate)
 
                                                                                   if (!data.metaData) {
                                                                                       $('.message_cek').text('Surat Kontrol diproses');
                                                                                       var data_surkon = data['list'];
                                                                                       console.log('dsurkon', data_surkon);
-                                                                                      const datasurkon = data_surkon.filter(data_surkon => data_surkon.tglRencanaKontrol === date);
+                                                                                      const datasurkon = data_surkon.filter(data_surkon => data_surkon.tglRencanaKontrol === formattedDate);
                                                                                       console.log('nokon', data);
 
                                                                                       if (datasurkon.length === 0) {
