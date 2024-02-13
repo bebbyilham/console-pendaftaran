@@ -516,19 +516,19 @@
                                                           $('.message_cek').text('Pengecekan Surat Kontrol');
 
                                                           var today = new Date();
-                                                          var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-                                                          var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+                                                          //   var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+                                                          //   var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
 
                                                           var formatter = new Intl.DateTimeFormat('fr-CA', {
                                                               day: '2-digit',
                                                               month: '2-digit',
                                                               year: 'numeric'
                                                           });
-                                                          var formattedDate = formatter.format(date);
+                                                          var formattedDate = formatter.format(today);
 
-                                                          var dateTime = date + ' ' + time;
+                                                          //   var dateTime = date + ' ' + time;
 
-                                                          console.log('date', date)
+                                                          //   console.log('date', date)
                                                           console.log('formattedDate', formattedDate)
 
                                                           if (!data.metaData) {
@@ -906,8 +906,8 @@
 
                                   } else if (cek_jeniskunjungan == '1') {
                                       var today = new Date();
-                                      var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-                                      var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+                                      //   var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+                                      //   var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
 
                                       var formatter = new Intl.DateTimeFormat('fr-CA', {
                                           day: '2-digit',
@@ -916,7 +916,7 @@
                                       });
                                       var formattedDate = formatter.format(date);
 
-                                      var dateTime = date + ' ' + time;
+                                      //   var dateTime = date + ' ' + time;
                                       //   Swal.fire({
                                       //       icon: 'info',
                                       //       title: 'Kunjungan Tidak Sesuai',
@@ -1382,8 +1382,8 @@
                                                                               success: function(data) {
 
                                                                                   var today = new Date();
-                                                                                  var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-                                                                                  var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+                                                                                  //   var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+                                                                                  //   var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
 
                                                                                   var formatter = new Intl.DateTimeFormat('fr-CA', {
                                                                                       day: '2-digit',
@@ -1392,9 +1392,9 @@
                                                                                   });
                                                                                   var formattedDate = formatter.format(date);
 
-                                                                                  var dateTime = date + ' ' + time;
+                                                                                  //   var dateTime = date + ' ' + time;
 
-                                                                                  console.log('date', date)
+                                                                                  //   console.log('date', date)
                                                                                   console.log('formattedDate', formattedDate)
 
                                                                                   if (!data.metaData) {
