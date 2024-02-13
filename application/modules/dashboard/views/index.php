@@ -1478,7 +1478,7 @@
                                                                                                                           shift2: jampraktek,
                                                                                                                           statusantrean: statusantrean,
                                                                                                                           checkin: checkin,
-                                                                                                                          tanggalperiksa: date,
+                                                                                                                          tanggalperiksa: formattedDate,
                                                                                                                           pasien_prioritas: pasien_prioritas,
                                                                                                                           nomorreferensi: noSuratKontrol,
                                                                                                                       },
