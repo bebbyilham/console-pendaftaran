@@ -914,7 +914,7 @@
                                           month: '2-digit',
                                           year: 'numeric'
                                       });
-                                      var formattedDate = formatter.format(date);
+                                      var formattedDate = formatter.format(today);
 
                                       //   var dateTime = date + ' ' + time;
                                       //   Swal.fire({
@@ -937,7 +937,7 @@
                                                   var poliTujuan = data.metadata.result.kodepoli
                                                   var kodeDokter = data.metadata.result.kodedokter
                                                   var jeniskunjungan = cek_jeniskunjungan
-                                                  if (tanggalRencanaKunjungan == date) {
+                                                  if (tanggalRencanaKunjungan == formattedDate) {
 
                                                       $.ajax({
                                                           url: '<?php echo base_url(); ?>dashboard/cari_rujukan_online',
@@ -1390,7 +1390,7 @@
                                                                                       month: '2-digit',
                                                                                       year: 'numeric'
                                                                                   });
-                                                                                  var formattedDate = formatter.format(date);
+                                                                                  var formattedDate = formatter.format(today);
 
                                                                                   //   var dateTime = date + ' ' + time;
 
