@@ -230,6 +230,7 @@ $content .= '<div>
                 </tbody>
             </table>
             <h1><b>NO. ANTRIAN : ' . $dataantrean['nomorantreanpoli'] . '</b></h1>
+            <h1><b>SILAHKAN KE LOKET 4</b></h1>
             <p><b>BUKTI INI TIDAK BOLEH HILANG.</b></p>
         </div>';
 
