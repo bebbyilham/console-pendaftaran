@@ -1167,6 +1167,49 @@ class Dashboard extends MX_Controller
         }
     }
 
+    public function cekHistoriPelayanan()
+    {
+        $tanggal = date('Y-m-d');
+        $data = getenv('BPJS_VCLAIM_CONSID');
+        $secretKey = getenv('BPJS_VCLAIM_SIGNATURE');
+        $user_key = getenv('BPJS_VCAIM_USERKEY');
+
+        date_default_timezone_set('UTC');
+        $tStamp = strval(time() - strtotime('1970-01-01 00:00:00'));
+
+        $signature = hash_hmac('sha256', $data . "&" . $tStamp, $secretKey, true);
+        $encodedSignature = base64_encode($signature);
+
+        $headers = [
+            'X-cons-id: ' . $data . '',
+            'X-timestamp: ' . $tStamp . '',
+            'X-signature: ' . $encodedSignature . '',
+            'User-key: ' . $user_key . '',
+            'Content-Type: application/json; charset=utf-8',
+        ];
+
+        $url = getenv('BPJS_VCLAIM_URL') . "monitoring/HistoriPelayanan/NoKartu/" . $_POST['no_kartu_histori'] . "/tglMulai/" . $tanggal . "/tglAkhir/" . $tanggal;
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 3);
+        curl_setopt($ch, CURLOPT_HTTPGET, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        $content = curl_exec($ch);
+        $err = curl_error($ch);
+        curl_close($ch);
+
+        $resultarr = json_decode($content, true);
+        $key = '' . $data . '' . $secretKey . '' . $tStamp . '';
+        if ($resultarr['metaData']['code'] == 200) {
+            $response = $this->stringDecrypt($key, $resultarr['response']);
+            echo $response;
+        } else {
+            echo json_encode($resultarr['metaData']['message']);
+        }
+    }
+
     public function cek_pasien()
     {
         $kodebooking = $_POST['kodebooking'];
@@ -1205,6 +1248,8 @@ class Dashboard extends MX_Controller
             ], 201);
         }
     }
+
+
 
     public function cek_kunjungan()
     {
@@ -1649,7 +1694,14 @@ class Dashboard extends MX_Controller
         $tgl_regis = $tanggalperiksa;
 
 
-        $last_row = $this->db->select('id_kunjungan')->order_by('id_kunjungan', "desc")->get_where('pasien_kunjungan', ['tanggal_registrasi' => $tgl_regis, 'jenis_layanan' => 2])->num_rows();
+        // $last_row = $this->db->select('id_kunjungan')->order_by('id_kunjungan', "desc")->get_where('pasien_kunjungan', ['tanggal_registrasi' => $tgl_regis, 'jenis_layanan' => 2])->num_rows();
+        $last_row = $this->db->select('id_kunjungan')
+            ->where('tanggal_registrasi', $tgl_regis)
+            ->where('jenis_layanan', 2)
+            ->where('id_poli !=', 7)
+            ->order_by('id_kunjungan', "desc")
+            ->get('pasien_kunjungan')
+            ->num_rows();
 
 
 
