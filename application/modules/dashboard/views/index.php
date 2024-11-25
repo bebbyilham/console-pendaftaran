@@ -922,6 +922,9 @@
                                       //       title: 'Kunjungan Tidak Sesuai',
                                       //       text: 'Silahkan mendaftar melalui admisi',
                                       //   });
+                                      var tanggalRencanaKunjungan = data.metadata.result.tanggalperiksa
+                                      var poliTujuan = data.metadata.result.kodepoli
+                                      var kodeDokter = data.metadata.result.kodedokter
                                       $.ajax({
                                           url: '<?php echo base_url(); ?>dashboard/cek_kunjungan',
                                           method: 'POST',
@@ -933,9 +936,9 @@
                                               var code_cek_kunjungan = data.metadata.code
                                               var message_cek_kunjungan = data.metadata.message
                                               if (code_cek_kunjungan == '200') {
-                                                  var tanggalRencanaKunjungan = data.metadata.result.tanggalperiksa
-                                                  var poliTujuan = data.metadata.result.kodepoli
-                                                  var kodeDokter = data.metadata.result.kodedokter
+                                                  //   var tanggalRencanaKunjungan = data.metadata.result.tanggalperiksa
+                                                  //   var poliTujuan = data.metadata.result.kodepoli
+                                                  //   var kodeDokter = data.metadata.result.kodedokter
                                                   var jeniskunjungan = cek_jeniskunjungan
                                                   if (tanggalRencanaKunjungan == formattedDate) {
 
