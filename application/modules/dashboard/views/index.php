@@ -924,6 +924,34 @@
 
                                                           });
 
+                                                          qz.printers.find("Receipt").then(function(printer) {
+                                                              var config = qz.configs.create(printer);
+                                                              //   console.log(noreg);
+                                                              var no_reg = noreg;
+
+                                                              // Raw ZPL
+                                                              // var angka = noantrean;
+                                                              var today = new Date();
+                                                              var month = today.getMonth() + 1;
+                                                              var time = today.getDate() + "/" + month + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+                                                              var data = [{
+                                                                  type: 'pixel',
+                                                                  format: 'pdf',
+                                                                  flavor: 'file',
+                                                                  data: '<?= base_url('dashboard/cetak_registrasi_bpjs/') ?>' + no_reg
+                                                              }];
+                                                              return qz.print(config, data);
+                                                          }).catch(function(e) {
+                                                              console.log(e);
+                                                              //   alert("Printer Tidak Ditemukan");
+                                                              Swal.fire({
+                                                                  icon: 'error',
+                                                                  title: 'Printer Tidak Ditemukan',
+                                                                  text: data.metadata.message,
+                                                              });
+
+                                                          });
+
                                                           $('#modal-kodebooking-jkn').modal('hide');
                                                       }
                                                   })
