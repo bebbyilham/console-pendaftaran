@@ -2154,6 +2154,7 @@ class Dashboard extends MX_Controller
             $kodebooking = $cekantrian['kodebooking'];
             $dataupdate = [
                 'statusantrean' => 3,
+                'keterangan' => 'APM ONSITE',
             ];
             $this->db->where('kodebooking', $kodebooking);
             $this->db->update('simrsj_webservice.antrean', $dataupdate);
@@ -2246,7 +2247,8 @@ class Dashboard extends MX_Controller
                 'tanggalperiksa' => date('Y-m-d'),
                 'pasien_prioritas' => $pasien_prioritas,
                 'nomorreferensi' => $nomorreferensi,
-                'created_at' => date('Y-m-d H:i:s')
+                'created_at' => date('Y-m-d H:i:s'),
+                'keterangan' => 'APM ONSITE',
             );
 
 
@@ -2858,5 +2860,22 @@ class Dashboard extends MX_Controller
                 ],
             ], 201);
         }
+    }
+
+    public function checkinAntrian()
+    {
+        $yourdate = date("Y-m-d H:i:s");
+        $stamp = strtotime($yourdate);
+        $estimasidilayani = $stamp * 1000;
+        $data = array(
+            'statusantrean' => "3",
+            'checkin' => 1,
+            'keterangan' => "-",
+            'waktu' => $estimasidilayani,
+        );
+        $this->db->where('kodebooking', $_POST['kodebooking']);
+        $this->db->update('simrsj_webservice.antrean', $data);
+        // $this->Antrian_model->ubah_status_antrian($_POST["id"], $data);
+        echo "Check in berhasil";
     }
 }
