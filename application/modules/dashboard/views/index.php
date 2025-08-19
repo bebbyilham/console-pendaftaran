@@ -78,7 +78,17 @@
                                       <h5 class="card-title text-uppercase text-muted mb-0">Jadwal Dokter Poli Jiwa</h5>
                                       <marquee>
                                           <?php foreach ($jadwaldokter as $row) {
-                                                echo '<span class="h2 font-weight-bold mb-0">' . $row['dokter_nama'] . ' |</span> ';
+                                                if ($row['jenisjadwal'] == '1') {
+                                                    echo '<span class="h2 font-weight-bold mb-0 text-primary">' . $row['dokter_nama'] . ' (DEWASA) |</span> ';
+                                                } else
+                                                if ($row['jenisjadwal'] == '2') {
+                                                    echo '<span class="h2 font-weight-bold text-info mb-0">' . $row['dokter_nama'] . ' (ANAK) |</span> ';
+                                                } else
+                                                if ($row['jenisjadwal'] == '3') {
+                                                    echo '<span class="h2 font-weight-bold mb-0">' . $row['dokter_nama'] . ' (SEMUA) |</span> ';
+                                                } else {
+                                                    echo '<span class="h2 font-weight-bold mb-0">' . $row['dokter_nama'] . ' |</span> ';
+                                                }
                                             }
                                             ?>
                                       </marquee>
