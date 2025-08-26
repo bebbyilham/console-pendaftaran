@@ -47,6 +47,7 @@ class Dashboard extends MX_Controller
             ->like('kodebooking', $kodebooking)
             ->or_like('norm',  preg_replace("/-/", "", $kodebooking))
             ->or_like('nomorkartu',  preg_replace("/-/", "", $kodebooking))
+            ->where(['statusantrean !=', 99])
             ->get('simrsj_webservice.antrean')->row_array();
         if ($databooking) {
             if ($databooking['tanggalperiksa'] != date('Y-m-d')) {
